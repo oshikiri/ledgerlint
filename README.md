@@ -5,7 +5,7 @@ A linter for ledger/hledger transaction files
 
 ## Usage
 ```
-$ ledgerlint -f sample/imbalanced.ledger
+$ ledgerlint -f fixtures/imbalance.ledger
 
 # TODO
 ```
@@ -24,6 +24,7 @@ MIT
     - unknown accounts
     - invalid spaces
     - aesthetic spacing
+- Read ledger/hledger parsing specification/implementation
 - `--overwrite`
 - Impl goreleaser
 - Add vscode extension (vscode-ledgerlint)
