@@ -11,8 +11,27 @@ $ ledgerlint -f fixtures/imbalance.ledger
 ```
 
 ## Installation
+### From binary
 
 // TODO
+
+## From source code
+
+```sh
+go get github.com/oshikiri/scount
+go install github.com/oshikiri/scount
+```
+
+and then add `~/go/bin` to `$PATH`.
+
+## Development
+```sh
+# Build and create ./ledgerlint binary
+go build
+
+# Run tests
+go test
+```
 
 ## License
 
