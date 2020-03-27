@@ -11,6 +11,16 @@ func getFixturePath(caseName string) string {
 	return fmt.Sprintf("fixtures/%v.ledger", caseName)
 }
 
+func TestRegexPatternPosting(t *testing.T) {
+	postingStr := "  Expences:Household essentials  200 JPY ; some comments"
+	expected := []string{"Expences:Household essentials", "200", "JPY"}
+
+	actual := postingPattern.FindStringSubmatch(postingStr)[1:]
+	if len(actual) != len(expected) || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("regex patternPosting should parse as %v but got %v", expected, actual)
+	}
+}
+
 func TestReadFixtureImbalance(t *testing.T) {
 	caseName := "imbalance"
 	fixturePath := getFixturePath(caseName)
@@ -21,6 +31,18 @@ func TestReadFixtureImbalance(t *testing.T) {
 		date:        "2020-03-26",
 		status:      "*",
 		description: "toilet paper",
+		postings: []Posting{
+			Posting{
+				account:  "Expences:Household essentials",
+				figure:   200,
+				currency: "JPY",
+			},
+			Posting{
+				account:  "Assets:Cash",
+				figure:   -2000,
+				currency: "JPY",
+			},
+		},
 	}
 
 	if !reflect.DeepEqual(actual, expected) {

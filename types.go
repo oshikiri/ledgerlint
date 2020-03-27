@@ -12,12 +12,7 @@ type Transaction struct {
 
 // Posting contains its account type and amount object
 type Posting struct {
-	account string
-	amount  Amount
-}
-
-// Amount contains amount of money and its currency
-type Amount struct {
+	account  string
 	figure   int
 	currency string
 }
