@@ -7,7 +7,11 @@ A linter for ledger/hledger transaction files
 ```
 $ ledgerlint -f fixtures/imbalance.ledger
 
-# TODO: implement
+2020-03-26 * toilet paper
+  Expences:Household essentials    200 JPY
+  Assets:Cash                    -2000 JPY
+^^^^^
+ERROR: imbalanced transaction, total amount = -1800JPY
 ```
 
 ## Installation
@@ -15,7 +19,7 @@ $ ledgerlint -f fixtures/imbalance.ledger
 
 // TODO: Add goreleaser
 
-## From source code
+### From source code
 
 ```sh
 go get github.com/oshikiri/ledgerlint
