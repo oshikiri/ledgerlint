@@ -13,7 +13,7 @@ type Transaction struct {
 func (tx *Transaction) calculateTotalAmount() map[string]int {
 	totalAmounts := map[string]int{}
 	for _, posting := range tx.postings {
-		totalAmounts[posting.currency] += posting.figure
+		totalAmounts[posting.currency] += posting.amount
 	}
 	return totalAmounts
 }
@@ -21,6 +21,6 @@ func (tx *Transaction) calculateTotalAmount() map[string]int {
 // Posting contains its account type and amount object
 type Posting struct {
 	account  string
-	figure   int
+	amount   int
 	currency string
 }

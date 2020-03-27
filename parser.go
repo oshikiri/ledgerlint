@@ -17,7 +17,7 @@ func parsePostingStr(s string) (bool, Posting) {
 	figure, _ := strconv.Atoi(m[2])
 	p := Posting{
 		account:  m[1],
-		figure:   figure,
+		amount:   figure,
 		currency: m[3],
 	}
 
