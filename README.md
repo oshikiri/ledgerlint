@@ -5,13 +5,13 @@ A linter for ledger/hledger transaction files
 
 ## Usage
 ```
-$ ledgerlint -f fixtures/imbalance.ledger
-
+$ cat fixtures/imbalance.ledger
 2020-03-26 * toilet paper
   Expences:Household essentials    200 JPY
   Assets:Cash                    -2000 JPY
-^^^^^
-ERROR: imbalanced transaction, total amount = -1800JPY
+
+$ ledgerlint -f fixtures/imbalance.ledger
+fixtures/imbalance.ledger:1 imbalanced transaction is found. Total amount = (-1800 JPY)
 ```
 
 ## Installation
