@@ -1,10 +1,12 @@
 ledgerlint
 =====
 
-A linter for ledger/hledger transaction files
+A linter for [ledger]/[hledger] transaction files.
 
-## Usage
-```
+[ledger]: https://www.ledger-cli.org/
+[hledger]: https://hledger.org/
+
+```sh
 $ cat fixtures/imbalance.ledger
 2020-03-26 * toilet paper
   Expences:Household essentials    200 JPY
@@ -14,10 +16,14 @@ $ ledgerlint -f fixtures/imbalance.ledger
 fixtures/imbalance.ledger:1 imbalanced transaction is found. Total amount = (-1800 JPY)
 ```
 
+See `ledgerlint -h` for details.
+
+If you use vscode, see vscode-ledgerlint.
+
 ## Installation
 ### From binary
 
-// TODO: Add goreleaser
+See <https://github.com/oshikiri/ledgerlint/releases>
 
 ### From source code
 
