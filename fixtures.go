@@ -5,12 +5,12 @@ var transactionsImbalanced = Transaction{
 	status:      "*",
 	description: "toilet paper",
 	postings: []Posting{
-		Posting{
+		{
 			account:  "Expences:Household essentials",
 			amount:   200,
 			currency: "JPY",
 		},
-		Posting{
+		{
 			account:  "Assets:Cash",
 			amount:   -2000,
 			currency: "JPY",
