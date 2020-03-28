@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-var headerPattern = regexp.MustCompile(`(\d{4}-\d{2}-\d{2}) (\*|!) (.+)`)
-var postingPattern = regexp.MustCompile(`\s{2,}(.+)\s{2,}(-?\s?\d+)\s(USD|JPY)`)
+var headerPattern = regexp.MustCompile(`(\d{4}-\d{2}-\d{2})\s+(?:([\*!])\s+|)([^;]+)`)
+var postingPattern = regexp.MustCompile(`\s{2,}([^;]+)\s{2,}(-?\s?\d+)\s([\w^;]+)`)
 
 func parsePostingStr(s string) (bool, Posting) {
 	m := postingPattern.FindStringSubmatch(s)
