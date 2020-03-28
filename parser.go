@@ -8,20 +8,30 @@ import (
 
 var headerPattern = regexp.MustCompile(`(\d{4}-\d{2}-\d{2})\s+(?:([\*!])\s+|)([^;]+)`)
 var postingPattern = regexp.MustCompile(`\s{2,}([^;]+)\s{2,}(-?\s?\d+)\s([\w^;]+)`)
+var postingEmptyAmountPattern = regexp.MustCompile(`\s{2,}([^;]+)`)
 
 func parsePostingStr(s string) (bool, Posting) {
 	m := postingPattern.FindStringSubmatch(s)
-	if len(m) < 4 {
-		return false, Posting{}
+	if len(m) == 0 { // empty amount
+		m := postingEmptyAmountPattern.FindStringSubmatch(s)
+		if len(m) == 2 {
+			p := Posting{
+				account:     m[1],
+				emptyAmount: true,
+			}
+			return true, p
+		}
+	} else if len(m) == 4 { // non-empty amount
+		amount, _ := strconv.Atoi(m[2])
+		p := Posting{
+			account:     m[1],
+			amount:      Amount(amount),
+			currency:    m[3],
+			emptyAmount: false,
+		}
+		return true, p
 	}
-	amount, _ := strconv.Atoi(m[2])
-	p := Posting{
-		account:  m[1],
-		amount:   Amount(amount),
-		currency: m[3],
-	}
-
-	return true, p
+	return false, Posting{}
 }
 
 func parseTransactionStr(s string) (bool, Transaction) {

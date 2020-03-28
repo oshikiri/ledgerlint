@@ -21,15 +21,26 @@ type Transaction struct {
 
 func (tx *Transaction) calculateTotalAmount() map[string]Amount {
 	totalAmounts := map[string]Amount{}
+	containsEmptyAmount := false
 	for _, posting := range tx.postings {
-		totalAmounts[posting.currency] += posting.amount
+		if posting.emptyAmount {
+			if containsEmptyAmount {
+				// TODO: error contains two or more empty transactions
+				return nil
+			} else {
+				containsEmptyAmount = true
+			}
+		} else {
+			totalAmounts[posting.currency] += posting.amount
+		}
 	}
 	return totalAmounts
 }
 
 // Posting contains its account type and amount object
 type Posting struct {
-	account  string
-	amount   Amount
-	currency string
+	account     string
+	emptyAmount bool
+	amount      Amount
+	currency    string
 }
