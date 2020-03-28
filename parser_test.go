@@ -21,34 +21,35 @@ func TestRegexPatternPosting(t *testing.T) {
 	}
 }
 
-func TestReadFixtureImbalance(t *testing.T) {
-	caseName := "imbalance"
-	fixturePath := getFixturePath(caseName)
-
-	bytes, _ := ioutil.ReadFile(fixturePath)
-	actualSuceeded, actual := parseTransactionStr(string(bytes))
-	expected := transactionsImbalanced
-
-	if !actualSuceeded {
-		t.Error("parseTransactionStr failed")
-	}
-	if !reflect.DeepEqual(actual, expected) {
-		t.Errorf("Read %v, %v expected but got %v", fixturePath, expected, actual)
-	}
+type FixtureTuple struct {
+	caseName            string
+	expectedTransaction Transaction
 }
 
-func TestReadFixtureImbalanceMultiCurrency(t *testing.T) {
-	caseName := "imbalance-multi-currency"
-	fixturePath := getFixturePath(caseName)
-
-	bytes, _ := ioutil.ReadFile(fixturePath)
-	actualSuceeded, actual := parseTransactionStr(string(bytes))
-	expected := transactionsImbalancedMultiCurrency
-
-	if !actualSuceeded {
-		t.Error("parseTransactionStr failed")
+func TestReadFixtures(t *testing.T) {
+	fixtures := []FixtureTuple{
+		{
+			"imbalance",
+			transactionsImbalanced,
+		},
+		{
+			"imbalance-multi-currency",
+			transactionsImbalancedMultiCurrency,
+		},
 	}
-	if !reflect.DeepEqual(actual, expected) {
-		t.Errorf("Read %v, %v expected but got %v", fixturePath, expected, actual)
+
+	for _, fixture := range fixtures {
+		caseName := fixture.caseName
+		expected := fixture.expectedTransaction
+		fixturePath := getFixturePath(caseName)
+		bytes, _ := ioutil.ReadFile(fixturePath)
+		actualSuceeded, actual := parseTransactionStr(string(bytes))
+
+		if !actualSuceeded {
+			t.Errorf("%v: parseTransactionStr failed", fixturePath)
+		}
+		if !reflect.DeepEqual(actual, expected) {
+			t.Errorf("%v: %v expected but got %v", fixturePath, expected, actual)
+		}
 	}
 }
