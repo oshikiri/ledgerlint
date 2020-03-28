@@ -18,6 +18,7 @@ func buildImbalancedTransactionMsg(
 		amountStrs = append(amountStrs, amountAndCurrency)
 	}
 	imbalancedTransactionMsg := "%v:%v imbalanced transaction, (total amount) = %v"
+	// FIXME: 1000 USD + -1800 JPY
 	msg := fmt.Sprintf(
 		imbalancedTransactionMsg,
 		filePath,

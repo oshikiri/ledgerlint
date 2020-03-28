@@ -38,7 +38,7 @@ func parseTransactionStr(s string) (bool, Transaction) {
 	lines := strings.Split(s, "\n")
 	matched := headerPattern.FindStringSubmatch(lines[0])
 	if len(matched) <= 1 {
-		// TODO
+		// TODO: ここにヒットしないような文字列がこの関数に渡されるべきな気がする
 		return false, Transaction{}
 	}
 	header := matched[1:]
