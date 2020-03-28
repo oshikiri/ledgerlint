@@ -13,7 +13,7 @@ func buildImbalancedTransactionMsg(filePath string, lineNumber int, amounts map[
 		amountAndCurrency := fmt.Sprintf("%v %v", amount, currency)
 		amountStrs = append(amountStrs, amountAndCurrency)
 	}
-	imbalancedTransactionMsg := "%v:%v imbalanced transaction is found. Total amount = (%v)"
+	imbalancedTransactionMsg := "%v:%v imbalanced transaction, (total amount) = %v"
 	msg := fmt.Sprintf(
 		imbalancedTransactionMsg,
 		filePath,
@@ -31,14 +31,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fileContent := string(bytes)
 
-	transactionStrs := strings.Split(string(bytes), "\n\n")
-	_, transaction := parseTransactionStr(transactionStrs[0])
-	lineNumber := 1
-	imbalancedTransactionMsg := buildImbalancedTransactionMsg(
-		*filePath,
-		lineNumber,
-		transaction.calculateTotalAmount(),
-	)
-	fmt.Println(imbalancedTransactionMsg)
+	countNewlines := 1
+	transactionStrs := strings.Split(fileContent, "\n\n")
+	for _, transactionStr := range transactionStrs {
+		_, transaction := parseTransactionStr(transactionStr)
+		imbalancedTransactionMsg := buildImbalancedTransactionMsg(
+			*filePath,
+			countNewlines,
+			transaction.calculateTotalAmount(),
+		)
+		fmt.Println(imbalancedTransactionMsg)
+		countNewlines += strings.Count(transactionStr, "\n") + 2
+	}
 }

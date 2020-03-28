@@ -13,7 +13,7 @@ $ cat fixtures/imbalance.ledger
   Assets:Cash                    -2000 JPY
 
 $ ledgerlint -f fixtures/imbalance.ledger
-fixtures/imbalance.ledger:1 imbalanced transaction is found. Total amount = (-1800 JPY)
+fixtures/imbalance.ledger:1 imbalanced transaction, (total amount) = -1800 JPY
 ```
 
 See `ledgerlint -h` for details.
