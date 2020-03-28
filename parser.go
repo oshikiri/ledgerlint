@@ -36,7 +36,12 @@ func parsePostingStr(s string) (bool, Posting) {
 
 func parseTransactionStr(s string) (bool, Transaction) {
 	lines := strings.Split(s, "\n")
-	header := headerPattern.FindAllStringSubmatch(lines[0], 1)[0][1:]
+	matched := headerPattern.FindStringSubmatch(lines[0])
+	if len(matched) <= 1 {
+		// TODO
+		return false, Transaction{}
+	}
+	header := matched[1:]
 	t := Transaction{
 		date:        Date(header[0]),
 		status:      TransactionStatus(header[1]),
