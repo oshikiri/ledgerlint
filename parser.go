@@ -14,10 +14,10 @@ func parsePostingStr(s string) (bool, Posting) {
 	if len(m) < 4 {
 		return false, Posting{}
 	}
-	figure, _ := strconv.Atoi(m[2])
+	amount, _ := strconv.Atoi(m[2])
 	p := Posting{
 		account:  m[1],
-		amount:   figure,
+		amount:   Amount(amount),
 		currency: m[3],
 	}
 
@@ -28,8 +28,8 @@ func parseTransactionStr(s string) (bool, Transaction) {
 	lines := strings.Split(s, "\n")
 	header := headerPattern.FindAllStringSubmatch(lines[0], 1)[0][1:]
 	t := Transaction{
-		date:        header[0],
-		status:      header[1],
+		date:        Date(header[0]),
+		status:      TransactionStatus(header[1]),
 		description: header[2],
 		postings:    []Posting{},
 	}

@@ -8,7 +8,7 @@ import (
 func TestTransactionTotalAmount(t *testing.T) {
 	tx := transactionsImbalanced
 	actual := tx.calculateTotalAmount()
-	expected := map[string]int{
+	expected := map[string]Amount{
 		"JPY": -1800,
 	}
 	if !reflect.DeepEqual(actual, expected) {

@@ -2,16 +2,20 @@ package main
 
 // See https://hledger.org/add.html#what-s-in-a-transaction
 
+type Date string
+type TransactionStatus string
+type Amount int
+
 // Transaction contains its meta data and array of posting
 type Transaction struct {
-	date        string
-	status      string
+	date        Date
+	status      TransactionStatus
 	description string
 	postings    []Posting
 }
 
-func (tx *Transaction) calculateTotalAmount() map[string]int {
-	totalAmounts := map[string]int{}
+func (tx *Transaction) calculateTotalAmount() map[string]Amount {
+	totalAmounts := map[string]Amount{}
 	for _, posting := range tx.postings {
 		totalAmounts[posting.currency] += posting.amount
 	}
@@ -21,6 +25,6 @@ func (tx *Transaction) calculateTotalAmount() map[string]int {
 // Posting contains its account type and amount object
 type Posting struct {
 	account  string
-	amount   int
+	amount   Amount
 	currency string
 }

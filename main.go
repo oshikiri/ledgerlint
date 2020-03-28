@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func buildImbalancedTransactionMsg(filePath string, lineNumber int, amounts map[string]int) string {
+func buildImbalancedTransactionMsg(filePath string, lineNumber int, amounts map[string]Amount) string {
 	amountStrs := []string{}
 	for currency, amount := range amounts {
 		amountAndCurrency := fmt.Sprintf("%v %v", amount, currency)
