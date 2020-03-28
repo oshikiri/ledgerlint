@@ -27,9 +27,8 @@ func (tx *Transaction) calculateTotalAmount() map[string]Amount {
 			if containsEmptyAmount {
 				// TODO: error contains two or more empty transactions
 				return nil
-			} else {
-				containsEmptyAmount = true
 			}
+			containsEmptyAmount = true
 		} else {
 			totalAmounts[posting.currency] += posting.amount
 		}
