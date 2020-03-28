@@ -43,7 +43,9 @@ func main() {
 
 	bytes, err := ioutil.ReadFile(*filePath)
 	if err != nil {
-		panic(err)
+		// FIXME: show usage if filePath is empty
+		fmt.Printf("ioutil.ReadFile failed: %v, filePath='%v'\n", err, *filePath)
+		return
 	}
 	fileContent := string(bytes)
 
