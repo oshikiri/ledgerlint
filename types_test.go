@@ -7,7 +7,7 @@ import (
 
 func TestTransactionTotalAmount(t *testing.T) {
 	tx := transactionsImbalanced
-	actual := tx.calculateTotalAmount()
+	_, actual := tx.calculateTotalAmount()
 	expected := map[string]Amount{
 		"JPY": -1800,
 	}
@@ -18,7 +18,7 @@ func TestTransactionTotalAmount(t *testing.T) {
 
 func TestTransactionEmptyAmount(t *testing.T) {
 	tx := transactionsBalancedEmptyAmount
-	actual := tx.calculateTotalAmount()
+	_, actual := tx.calculateTotalAmount()
 	expected := map[string]Amount{
 		"JPY": 800,
 	}

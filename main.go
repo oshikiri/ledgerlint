@@ -27,6 +27,15 @@ func buildImbalancedTransactionMsg(
 	return msg
 }
 
+func isZeroAmount(amounts map[string]Amount) bool {
+	for _, v := range amounts {
+		if v != 0 {
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
 	var filePath = flag.String("f", "", "ledger/hledger transaction file")
 	flag.Parse()
@@ -41,12 +50,18 @@ func main() {
 	transactionStrs := strings.Split(fileContent, "\n\n")
 	for _, transactionStr := range transactionStrs {
 		_, transaction := parseTransactionStr(transactionStr)
-		imbalancedTransactionMsg := buildImbalancedTransactionMsg(
-			*filePath,
-			countNewlines,
-			transaction.calculateTotalAmount(),
-		)
-		fmt.Println(imbalancedTransactionMsg)
+
+		// Check the transaction is balanced or not
+		containsOneEmptyAmount, totalAmount := transaction.calculateTotalAmount()
+		if !(isZeroAmount(totalAmount) || containsOneEmptyAmount) {
+			imbalancedTransactionMsg := buildImbalancedTransactionMsg(
+				*filePath,
+				countNewlines,
+				totalAmount,
+			)
+			fmt.Println(imbalancedTransactionMsg)
+		}
+
 		countNewlines += strings.Count(transactionStr, "\n") + 2
 	}
 }
