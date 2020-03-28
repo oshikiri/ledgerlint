@@ -36,6 +36,14 @@ func TestReadFixtures(t *testing.T) {
 			"imbalance-multi-currency",
 			transactionsImbalancedMultiCurrency,
 		},
+		{
+			"balanced",
+			transactionsBalanced,
+		},
+		{
+			"balanced-empty-amount",
+			transactionsBalancedEmptyAmount,
+		},
 	}
 
 	for _, fixture := range fixtures {
