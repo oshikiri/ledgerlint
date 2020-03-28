@@ -26,9 +26,12 @@ func TestReadFixtureImbalance(t *testing.T) {
 	fixturePath := getFixturePath(caseName)
 
 	bytes, _ := ioutil.ReadFile(fixturePath)
-	actual := parseTransactionStr(string(bytes))
+	actualSuceeded, actual := parseTransactionStr(string(bytes))
 	expected := transactionsImbalanced
 
+	if !actualSuceeded {
+		t.Error("parseTransactionStr failed")
+	}
 	if !reflect.DeepEqual(actual, expected) {
 		t.Errorf("Read %v, %v expected but got %v", fixturePath, expected, actual)
 	}
@@ -39,9 +42,12 @@ func TestReadFixtureImbalanceMultiCurrency(t *testing.T) {
 	fixturePath := getFixturePath(caseName)
 
 	bytes, _ := ioutil.ReadFile(fixturePath)
-	actual := parseTransactionStr(string(bytes))
+	actualSuceeded, actual := parseTransactionStr(string(bytes))
 	expected := transactionsImbalancedMultiCurrency
 
+	if !actualSuceeded {
+		t.Error("parseTransactionStr failed")
+	}
 	if !reflect.DeepEqual(actual, expected) {
 		t.Errorf("Read %v, %v expected but got %v", fixturePath, expected, actual)
 	}

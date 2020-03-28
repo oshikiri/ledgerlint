@@ -24,7 +24,7 @@ func parsePostingStr(s string) (bool, Posting) {
 	return true, p
 }
 
-func parseTransactionStr(s string) Transaction {
+func parseTransactionStr(s string) (bool, Transaction) {
 	lines := strings.Split(s, "\n")
 	header := headerPattern.FindAllStringSubmatch(lines[0], 1)[0][1:]
 	t := Transaction{
@@ -40,5 +40,5 @@ func parseTransactionStr(s string) Transaction {
 			t.postings = append(t.postings, posting)
 		}
 	}
-	return t
+	return true, t
 }

@@ -33,7 +33,7 @@ func main() {
 	}
 
 	transactionStrs := strings.Split(string(bytes), "\n\n")
-	transaction := parseTransactionStr(transactionStrs[0])
+	_, transaction := parseTransactionStr(transactionStrs[0])
 	imbalancedTransactionMsg := buildImbalancedTransactionMsg(*filePath, 1, transaction.calculateTotalAmount())
 	fmt.Println(imbalancedTransactionMsg)
 }
