@@ -18,7 +18,9 @@ fixtures/imbalance.ledger:1 imbalanced transaction, (total amount) = -1800 JPY
 
 See `ledgerlint -h` for details.
 
-If you use vscode, see vscode-ledgerlint.
+If you use vscode, see [vscode-ledgerlint].
+
+[vscode-ledgerlint]: https://github.com/oshikiri/vscode-ledgerlint
 
 ## Installation
 ### From binary
