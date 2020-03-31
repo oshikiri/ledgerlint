@@ -3,30 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"strings"
 )
-
-func buildImbalancedTransactionMsg(
-	filePath string,
-	lineNumber int,
-	amounts map[string]Amount,
-) string {
-	amountStrs := []string{}
-	for currency, amount := range amounts {
-		amountAndCurrency := fmt.Sprintf("%v %v", amount, currency)
-		amountStrs = append(amountStrs, amountAndCurrency)
-	}
-	imbalancedTransactionMsg := "%v:%v imbalanced transaction, (total amount) = %v"
-	// FIXME: 1000 USD + -1800 JPY
-	msg := fmt.Sprintf(
-		imbalancedTransactionMsg,
-		filePath,
-		lineNumber,
-		strings.Join(amountStrs, " + "),
-	)
-	return msg
-}
 
 func isZeroAmount(amounts map[string]Amount) bool {
 	for _, v := range amounts {
@@ -39,19 +17,18 @@ func isZeroAmount(amounts map[string]Amount) bool {
 
 func main() {
 	var filePath = flag.String("f", "", "ledger/hledger transaction file")
+	var accountsPath = flag.String("account", "", "known accounts file")
 	flag.Parse()
 
-	bytes, err := ioutil.ReadFile(*filePath)
-	if err != nil {
-		// FIXME: show usage if filePath is empty
-		fmt.Printf("ioutil.ReadFile failed: %v, filePath='%v'\n", err, *filePath)
-		return
+	knownAccounts := []string{}
+	if *accountsPath != "" {
+		knownAccountsStr, _ := readFileContent(*accountsPath) // FIXME: error handling
+		knownAccounts = strings.Split(knownAccountsStr, "\n")
 	}
-	fileContent := string(bytes)
 
 	countNewlines := 1
-	transactionStrs := strings.Split(fileContent, "\n\n")
-	for _, transactionStr := range transactionStrs {
+	transactionsStr, _ := readFileContent(*filePath) // FIXME: error handling
+	for _, transactionStr := range strings.Split(transactionsStr, "\n\n") {
 		_, transaction := parseTransactionStr(transactionStr)
 
 		// Check the transaction is balanced or not
@@ -63,6 +40,14 @@ func main() {
 				totalAmount,
 			)
 			fmt.Println(imbalancedTransactionMsg)
+		}
+
+		// Check unknown account
+		for i, posting := range transaction.postings {
+			if len(knownAccounts) > 0 && !contains(knownAccounts, posting.account) {
+				unknownAccountMsg := "%v:%v unknown account: %v\n"
+				fmt.Printf(unknownAccountMsg, *filePath, countNewlines+i+1, posting.account)
+			}
 		}
 
 		countNewlines += strings.Count(transactionStr, "\n") + 2
