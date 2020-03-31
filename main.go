@@ -17,10 +17,14 @@ func isZeroAmount(amounts map[string]Amount) bool {
 
 func main() {
 	var filePath = flag.String("f", "", "ledger/hledger transaction file")
+	var accountsPath = flag.String("account", "", "known accounts file")
 	flag.Parse()
 
-	knownAccountsStr, _ := readFileContent("fixtures/accounts.txt") // FIXME: error handling
-	knownAccounts := strings.Split(knownAccountsStr, "\n")
+	knownAccounts := []string{}
+	if *accountsPath != "" {
+		knownAccountsStr, _ := readFileContent(*accountsPath) // FIXME: error handling
+		knownAccounts = strings.Split(knownAccountsStr, "\n")
+	}
 
 	countNewlines := 1
 	transactionsStr, _ := readFileContent(*filePath) // FIXME: error handling
@@ -40,7 +44,7 @@ func main() {
 
 		// Check unknown account
 		for i, posting := range transaction.postings {
-			if !contains(knownAccounts, posting.account) {
+			if len(knownAccounts) > 0 && !contains(knownAccounts, posting.account) {
 				unknownAccountMsg := "%v:%v unknown account: %v\n"
 				fmt.Printf(unknownAccountMsg, *filePath, countNewlines+i+1, posting.account)
 			}
