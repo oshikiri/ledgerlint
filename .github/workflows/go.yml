@@ -40,3 +40,5 @@ jobs:
         go build -v .
         go test
         go install -v .
+    - name: E2E tests
+      run: ./e2e.bash

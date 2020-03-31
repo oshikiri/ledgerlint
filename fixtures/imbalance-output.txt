@@ -1,0 +1,1 @@
+fixtures/imbalance.ledger:1 imbalanced transaction, (total amount) = -1800 JPY

@@ -1,0 +1,2 @@
+fixtures/unknown-account.ledger:2 unknown account: Expences:Unknown expence
+fixtures/unknown-account.ledger:7 unknown account: Assets:Unknown asset
