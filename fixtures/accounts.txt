@@ -1,0 +1,3 @@
+Assets:Cash
+Expences:Food
+Expences:Household essentials

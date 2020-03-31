@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"strings"
 )
 
@@ -41,13 +40,10 @@ func main() {
 	var filePath = flag.String("f", "", "ledger/hledger transaction file")
 	flag.Parse()
 
-	bytes, err := ioutil.ReadFile(*filePath)
-	if err != nil {
-		// FIXME: show usage if filePath is empty
-		fmt.Printf("ioutil.ReadFile failed: %v, filePath='%v'\n", err, *filePath)
-		return
-	}
-	fileContent := string(bytes)
+	fileContent, _ := readFileContent(*filePath)
+
+	knownAccountsStr, _ := readFileContent("fixtures/accounts.txt")
+	knownAccounts := strings.Split(knownAccountsStr, "\n")
 
 	countNewlines := 1
 	transactionStrs := strings.Split(fileContent, "\n\n")
@@ -63,6 +59,14 @@ func main() {
 				totalAmount,
 			)
 			fmt.Println(imbalancedTransactionMsg)
+		}
+
+		// Check unknown account
+		for i, posting := range transaction.postings {
+			if !contains(knownAccounts, posting.account) {
+				unknownAccountMsg := "%v:%v unknown account: %v\n"
+				fmt.Printf(unknownAccountMsg, *filePath, countNewlines+i+1, posting.account)
+			}
 		}
 
 		countNewlines += strings.Count(transactionStr, "\n") + 2
