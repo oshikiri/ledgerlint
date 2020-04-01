@@ -5,6 +5,14 @@ import (
 	"strings"
 )
 
+func isZeroAmount(amounts map[string]Amount) bool {
+	for _, v := range amounts {
+		if v != 0 {
+			return false
+		}
+	}
+	return true
+}
 func newValidator(filePath, accountsPath string) *Validator {
 	validator := Validator{
 		filePath:     filePath,
