@@ -1,10 +1,5 @@
-ledgerlint
+ledgerlint: a linter for ledger transaction
 =====
-
-A linter for [ledger]/[hledger] transaction files.
-
-[ledger]: https://www.ledger-cli.org/
-[hledger]: https://hledger.org/
 
 ```sh
 $ cat fixtures/imbalance.ledger
@@ -15,6 +10,11 @@ $ cat fixtures/imbalance.ledger
 $ ledgerlint -f fixtures/imbalance.ledger
 fixtures/imbalance.ledger:1 imbalanced transaction, (total amount) = -1800 JPY
 ```
+
+ledgerlint checks
+
+- imbalanced transactions
+- unknown account names
 
 See `ledgerlint -h` for details.
 
