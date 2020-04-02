@@ -7,6 +7,8 @@ func lintTransactionFile(filePath, accountsPath string) {
 
 	countNewlines := 1
 	transactionsStr, _ := readFileContent(filePath) // FIXME: error handling
+
+	// FIXME: warn if unmatched lines are found
 	for _, transactionStr := range strings.Split(transactionsStr, "\n\n") {
 		_, transaction := parseTransactionStr(transactionStr) // FIXME: error handling
 
