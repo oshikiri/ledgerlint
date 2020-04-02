@@ -71,17 +71,17 @@ var transactionsImbalancedMultiCurrency = Transaction{
 		{
 			account:  "Expences:Food",
 			amount:   1000,
-			currency: "USD",
+			currency: "JPY",
 		},
 		{
 			account:  "Expences:Household essentials",
 			amount:   200,
-			currency: "JPY",
+			currency: "USD",
 		},
 		{
 			account:  "Assets:Cash",
 			amount:   -2000,
-			currency: "JPY",
+			currency: "USD",
 		},
 	},
 }
