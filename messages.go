@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -10,18 +11,24 @@ func buildImbalancedTransactionMsg(
 	lineNumber int,
 	amounts map[string]Amount,
 ) string {
+	currencies := make([]string, 0, len(amounts))
+	for currency := range amounts {
+		currencies = append(currencies, currency)
+	}
+	sort.Strings(currencies)
+
 	amountStrs := []string{}
-	for currency, amount := range amounts {
+	for _, currency := range currencies {
+		amount := amounts[currency]
 		amountAndCurrency := fmt.Sprintf("%v %v", amount, currency)
 		amountStrs = append(amountStrs, amountAndCurrency)
 	}
 	imbalancedTransactionMsg := "%v:%v imbalanced transaction, (total amount) = %v"
-	// FIXME: 1000 USD + -1800 JPY
 	msg := fmt.Sprintf(
 		imbalancedTransactionMsg,
 		filePath,
 		lineNumber,
-		strings.Join(amountStrs, " + "),
+		strings.ReplaceAll(strings.Join(amountStrs, " + "), "+ -", "- "),
 	)
 	return msg
 }

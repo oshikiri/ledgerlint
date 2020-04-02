@@ -1,1 +1,1 @@
-fixtures/imbalance-multi-currency.ledger:1 imbalanced transaction, (total amount) = 1000 JPY + -1800 USD
+fixtures/imbalance-multi-currency.ledger:1 imbalanced transaction, (total amount) = 1000 JPY - 1800 USD
