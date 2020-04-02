@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+var commentOrEmptyPattern = regexp.MustCompile(`^\s*(?:;|$)`)
 var headerPattern = regexp.MustCompile(`(\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
 var postingPattern = regexp.MustCompile(`\s{2,}([^;]+)\s{2,}(-?\s?\d+)\s([\w^;]+)`)
 var postingEmptyAmountPattern = regexp.MustCompile(`\s{2,}([^;]+)`)
@@ -36,7 +37,17 @@ func parsePostingStr(s string) (bool, Posting) {
 
 func parseTransactionStr(s string) (bool, Transaction) {
 	lines := strings.Split(s, "\n")
-	matched := headerPattern.FindStringSubmatch(lines[0])
+	i := 0
+
+	// Skip comment or empty lines
+	for _, line := range lines {
+		if !commentOrEmptyPattern.MatchString(line) {
+			break
+		}
+		i++
+	}
+
+	matched := headerPattern.FindStringSubmatch(lines[i])
 	if len(matched) == 0 {
 		return false, Transaction{}
 	}
@@ -48,7 +59,7 @@ func parseTransactionStr(s string) (bool, Transaction) {
 		description: header[2],
 		postings:    []Posting{},
 	}
-	postingStrs := lines[1:]
+	postingStrs := lines[(i + 1):]
 	for _, postingStr := range postingStrs {
 		succeed, posting := parsePostingStr(postingStr)
 		if succeed {
