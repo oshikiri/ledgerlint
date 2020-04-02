@@ -18,6 +18,7 @@ function test_ledgerlint() {
 test_ledgerlint balanced
 test_ledgerlint balanced-empty-amount
 test_ledgerlint imbalance
+test_ledgerlint imbalance-multi-currency
 test_ledgerlint unknown-account "-account fixtures/accounts.txt"
 
 if [ $count_failed -eq 0 ]; then
