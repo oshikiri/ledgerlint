@@ -21,6 +21,7 @@ test_ledgerlint imbalance
 test_ledgerlint imbalance-multi-currency
 test_ledgerlint unknown-account "-account fixtures/accounts.txt"
 test_ledgerlint unmatched
+test_ledgerlint no-description
 
 if [ $count_failed -eq 0 ]; then
   echo "All tests passed"

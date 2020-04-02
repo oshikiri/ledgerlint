@@ -17,7 +17,16 @@ func TestRegexPatternPosting(t *testing.T) {
 
 	actual := postingPattern.FindStringSubmatch(postingStr)[1:]
 	if len(actual) != len(expected) || !reflect.DeepEqual(actual, expected) {
-		t.Errorf("regex patternPosting should parse as %v but got %v", expected, actual)
+		t.Errorf("regex postingPattern should parse as %v but got %v", expected, actual)
+	}
+}
+
+func TestRegexHeader(t *testing.T) {
+	headerStr := "2020-03-26 * toilet paper"
+	expected := []string{"2020-03-26", "*", "toilet paper"}
+	actual := headerPattern.FindStringSubmatch(headerStr)[1:]
+	if len(actual) != len(expected) || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("regex headerPattern should parse as %v but got %v", expected, actual)
 	}
 }
 

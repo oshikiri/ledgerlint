@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-var headerPattern = regexp.MustCompile(`(\d{4}[-/]\d{2}[-/]\d{2})\s+(?:([\*!])\s+|)([^;]+)`)
+var headerPattern = regexp.MustCompile(`(\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
 var postingPattern = regexp.MustCompile(`\s{2,}([^;]+)\s{2,}(-?\s?\d+)\s([\w^;]+)`)
 var postingEmptyAmountPattern = regexp.MustCompile(`\s{2,}([^;]+)`)
 
@@ -37,10 +37,10 @@ func parsePostingStr(s string) (bool, Posting) {
 func parseTransactionStr(s string) (bool, Transaction) {
 	lines := strings.Split(s, "\n")
 	matched := headerPattern.FindStringSubmatch(lines[0])
-	if len(matched) <= 1 {
-		// TODO: ここにヒットしないような文字列がこの関数に渡されるべきな気がする
+	if len(matched) == 0 {
 		return false, Transaction{}
 	}
+
 	header := matched[1:]
 	t := Transaction{
 		date:        Date(header[0]),
