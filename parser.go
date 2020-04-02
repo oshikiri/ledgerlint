@@ -23,14 +23,16 @@ func parsePostingStr(s string) (bool, Posting) {
 			return true, p
 		}
 	} else if len(m) == 4 { // non-empty amount
-		amount, _ := strconv.Atoi(m[2]) // FIXME: error handling
-		p := Posting{
-			account:     m[1],
-			amount:      Amount(amount),
-			currency:    m[3],
-			emptyAmount: false,
+		amount, err := strconv.Atoi(m[2])
+		if err == nil {
+			p := Posting{
+				account:     m[1],
+				amount:      Amount(amount),
+				currency:    m[3],
+				emptyAmount: false,
+			}
+			return true, p
 		}
-		return true, p
 	}
 	return false, Posting{}
 }

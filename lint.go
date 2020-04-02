@@ -6,7 +6,10 @@ func lintTransactionFile(filePath, accountsPath string) {
 	validator := newValidator(filePath, accountsPath)
 
 	countNewlines := 1
-	transactionsStr, _ := readFileContent(filePath) // FIXME: error handling
+	transactionsStr, err := readFileContent(filePath)
+	if err != nil {
+		panic(err)
+	}
 
 	for _, transactionStr := range strings.Split(transactionsStr, "\n\n") {
 		success, transaction := parseTransactionStr(transactionStr)

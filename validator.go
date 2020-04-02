@@ -20,7 +20,11 @@ func newValidator(filePath, accountsPath string) *Validator {
 	}
 
 	if accountsPath != "" {
-		knownAccountsStr, _ := readFileContent(accountsPath) // FIXME: error handling
+		knownAccountsStr, err := readFileContent(accountsPath)
+		if err != nil {
+			panic(err)
+		}
+
 		validator.knownAccounts = strings.Split(knownAccountsStr, "\n")
 	}
 

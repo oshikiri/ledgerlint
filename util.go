@@ -19,7 +19,6 @@ func contains(array []string, query string) bool {
 func readFileContent(filePath string) (string, error) {
 	bytes, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		// FIXME: show usage if filePath is empty
 		fmt.Printf("ioutil.ReadFile failed: %v, filePath='%v'\n", err, filePath)
 		return "", err
 	}
