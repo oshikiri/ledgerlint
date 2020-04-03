@@ -1,0 +1,1 @@
+fixtures/two-empty-amount.ledger:1 Transaction contains two or more empty amount
