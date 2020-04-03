@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -37,7 +39,7 @@ func parsePostingStr(s string) (bool, Posting) {
 	return false, Posting{}
 }
 
-func parseTransactionStr(s string) (bool, Transaction) {
+func parseTransactionStr(s string) (Transaction, error) {
 	lines := strings.Split(s, "\n")
 	i := 0
 
@@ -51,7 +53,7 @@ func parseTransactionStr(s string) (bool, Transaction) {
 
 	matched := headerPattern.FindStringSubmatch(lines[i])
 	if len(matched) == 0 {
-		return false, Transaction{}
+		return Transaction{}, errors.New("Header unmatched")
 	}
 
 	header := matched[1:]
@@ -63,10 +65,16 @@ func parseTransactionStr(s string) (bool, Transaction) {
 	}
 	postingStrs := lines[(i + 1):]
 	for _, postingStr := range postingStrs {
+		if commentOrEmptyPattern.MatchString(postingStr) {
+			continue
+		}
 		succeed, posting := parsePostingStr(postingStr)
 		if succeed {
 			t.postings = append(t.postings, posting)
+		} else {
+			msg := fmt.Sprintf("parsePostingStr is failed: '%v'", postingStr)
+			return Transaction{}, errors.New(msg)
 		}
 	}
-	return true, t
+	return t, nil
 }

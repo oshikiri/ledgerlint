@@ -60,10 +60,10 @@ func TestReadFixtures(t *testing.T) {
 		expected := fixture.expectedTransaction
 		fixturePath := getFixturePath(caseName)
 		bytes, _ := ioutil.ReadFile(fixturePath)
-		actualSuceeded, actual := parseTransactionStr(string(bytes))
+		actual, err := parseTransactionStr(string(bytes))
 
-		if !actualSuceeded {
-			t.Errorf("%v: parseTransactionStr failed", fixturePath)
+		if err != nil {
+			t.Errorf("%v: parseTransactionStr failed '%v'", fixturePath, err)
 		}
 		if !reflect.DeepEqual(actual, expected) {
 			t.Errorf("%v: %v expected but got %v", fixturePath, expected, actual)

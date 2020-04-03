@@ -58,7 +58,7 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 	}
 }
 
-func (validator *Validator) warnParseFailed(countNewlines int) {
-	parseFailedMsg := "%v:%v unmatched lines\n"
-	fmt.Printf(parseFailedMsg, validator.filePath, countNewlines)
+func (validator *Validator) warnParseFailed(countNewlines int, err error) {
+	parseFailedMsg := "%v:%v %v\n"
+	fmt.Printf(parseFailedMsg, validator.filePath, countNewlines, err)
 }

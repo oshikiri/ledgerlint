@@ -12,15 +12,15 @@ func lintTransactionFile(filePath, accountsPath string) {
 	}
 
 	for _, transactionStr := range strings.Split(transactionsStr, "\n\n") {
-		success, transaction := parseTransactionStr(transactionStr)
-		if success {
+		transaction, err := parseTransactionStr(transactionStr)
+		if err == nil {
 			validator.checkBalancing(countNewlines, transaction)
 
 			for i, posting := range transaction.postings {
 				validator.checkUnknownAccount(countNewlines+i+1, posting)
 			}
 		} else {
-			validator.warnParseFailed(countNewlines)
+			validator.warnParseFailed(countNewlines, err)
 		}
 
 		countNewlines += strings.Count(transactionStr, "\n") + 2
