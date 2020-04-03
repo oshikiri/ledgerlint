@@ -9,7 +9,7 @@ import (
 )
 
 var commentOrEmptyPattern = regexp.MustCompile(`^\s*(?:;|$)`)
-var headerPattern = regexp.MustCompile(`(\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
+var headerPattern = regexp.MustCompile(`^(~|\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
 var postingPattern = regexp.MustCompile(`\s{2,}([^;]+)\s{2,}(-?\s?\d+)\s([\w^;]+)`)
 var postingEmptyAmountPattern = regexp.MustCompile(`\s{2,}([^;]+)`)
 
