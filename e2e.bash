@@ -29,7 +29,7 @@ test_ledgerlint unmatched
 test_ledgerlint no-description
 test_ledgerlint nonewline
 pending test_ledgerlint budget
-pending test_ledgerlint two-empty-amount
+test_ledgerlint two-empty-amount
 
 if [ $count_failed -eq 0 ]; then
   echo "All tests passed"

@@ -46,9 +46,11 @@ func (validator *Validator) checkUnknownAccount(countNewlines int, posting Posti
 }
 
 func (validator *Validator) checkBalancing(countNewlines int, transaction Transaction) {
-	containsOneEmptyAmount, totalAmount := transaction.calculateTotalAmount()
+	containsOneEmptyAmount, totalAmount, err := transaction.calculateTotalAmount()
 
-	if !(isZeroAmount(totalAmount) || containsOneEmptyAmount) {
+	if err != nil {
+		fmt.Printf("%v:%v %v\n", validator.filePath, countNewlines, err)
+	} else if !(isZeroAmount(totalAmount) || containsOneEmptyAmount) {
 		imbalancedTransactionMsg := buildImbalancedTransactionMsg(
 			validator.filePath,
 			countNewlines,
