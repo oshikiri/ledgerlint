@@ -70,23 +70,23 @@ func parseTransactionStr(s string) (Transaction, error) {
 		i++
 	}
 
-	matched := headerPattern.FindStringSubmatch(lines[i])
-	if len(matched) == 0 {
-		return Transaction{}, errors.New("Header unmatched")
-	}
+	transactionHeaderMatches := headerPattern.FindStringSubmatch(lines[i])
+	if len(transactionHeaderMatches) > 0 {
+		header := transactionHeaderMatches[1:]
+		t := Transaction{
+			date:        Date(header[0]),
+			status:      TransactionStatus(header[1]),
+			description: header[2],
+			postings:    []Posting{},
+		}
 
-	header := matched[1:]
-	t := Transaction{
-		date:        Date(header[0]),
-		status:      TransactionStatus(header[1]),
-		description: header[2],
-		postings:    []Posting{},
-	}
+		postings, err := parsePostingStrs(lines[(i + 1):])
+		if err != nil {
+			return Transaction{}, err
+		}
+		t.postings = postings
 
-	postings, err := parsePostingStrs(lines[(i + 1):])
-	if err != nil {
-		return Transaction{}, err
+		return t, nil
 	}
-	t.postings = postings
-	return t, nil
+	return Transaction{}, errors.New("Header unmatched")
 }
