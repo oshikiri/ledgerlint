@@ -25,7 +25,10 @@ func newValidator(filePath, accountsPath string) *Validator {
 			panic(err)
 		}
 
-		validator.knownAccounts = strings.Split(knownAccountsStr, "\n")
+		validator.knownAccounts = map[string]bool{}
+		for _, account := range strings.Split(knownAccountsStr, "\n") {
+			validator.knownAccounts[account] = true
+		}
 	}
 
 	return &validator
@@ -35,13 +38,16 @@ func newValidator(filePath, accountsPath string) *Validator {
 type Validator struct {
 	filePath      string
 	accountsPath  string
-	knownAccounts []string
+	knownAccounts map[string]bool // values are not used
 }
 
 func (validator *Validator) checkUnknownAccount(countNewlines int, posting Posting) {
-	if len(validator.knownAccounts) > 0 && !contains(validator.knownAccounts, posting.account) {
-		unknownAccountMsg := "%v:%v unknown account: %v\n"
-		fmt.Printf(unknownAccountMsg, validator.filePath, countNewlines, posting.account)
+	if len(validator.knownAccounts) > 0 {
+		_, exists := validator.knownAccounts[posting.account]
+		if !exists {
+			unknownAccountMsg := "%v:%v unknown account: %v\n"
+			fmt.Printf(unknownAccountMsg, validator.filePath, countNewlines, posting.account)
+		}
 	}
 }
 

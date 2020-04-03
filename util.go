@@ -5,17 +5,6 @@ import (
 	"io/ioutil"
 )
 
-// FIXME?: The current implementation requires O(n)
-//         (but the array is usually small)
-func contains(array []string, query string) bool {
-	for _, item := range array {
-		if query == item {
-			return true
-		}
-	}
-	return false
-}
-
 func readFileContent(filePath string) (string, error) {
 	bytes, err := ioutil.ReadFile(filePath)
 	if err != nil {
