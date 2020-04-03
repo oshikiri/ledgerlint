@@ -8,8 +8,9 @@ import (
 	"strings"
 )
 
+// FIXME: suspicious parsing logic
 var commentOrEmptyPattern = regexp.MustCompile(`^\s*(?:;|$)`)
-var headerPattern = regexp.MustCompile(`(\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
+var headerPattern = regexp.MustCompile(`^(~|\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
 var postingPattern = regexp.MustCompile(`\s{2,}([^;]+)\s{2,}(-?\s?\d+)\s([\w^;]+)`)
 var postingEmptyAmountPattern = regexp.MustCompile(`\s{2,}([^;]+)`)
 
@@ -39,6 +40,25 @@ func parsePostingStr(s string) (bool, Posting) {
 	return false, Posting{}
 }
 
+func parsePostingStrs(postingStrs []string) ([]Posting, error) {
+	postings := []Posting{}
+
+	for _, postingStr := range postingStrs {
+		if commentOrEmptyPattern.MatchString(postingStr) {
+			continue
+		}
+		succeed, posting := parsePostingStr(postingStr)
+		if succeed {
+			postings = append(postings, posting)
+		} else {
+			msg := fmt.Sprintf("parsePostingStr is failed: '%v'", postingStr)
+			return nil, errors.New(msg)
+		}
+	}
+
+	return postings, nil
+}
+
 func parseTransactionStr(s string) (Transaction, error) {
 	lines := strings.Split(s, "\n")
 	i := 0
@@ -63,18 +83,11 @@ func parseTransactionStr(s string) (Transaction, error) {
 		description: header[2],
 		postings:    []Posting{},
 	}
-	postingStrs := lines[(i + 1):]
-	for _, postingStr := range postingStrs {
-		if commentOrEmptyPattern.MatchString(postingStr) {
-			continue
-		}
-		succeed, posting := parsePostingStr(postingStr)
-		if succeed {
-			t.postings = append(t.postings, posting)
-		} else {
-			msg := fmt.Sprintf("parsePostingStr is failed: '%v'", postingStr)
-			return Transaction{}, errors.New(msg)
-		}
+
+	postings, err := parsePostingStrs(lines[(i + 1):])
+	if err != nil {
+		return Transaction{}, err
 	}
+	t.postings = postings
 	return t, nil
 }
