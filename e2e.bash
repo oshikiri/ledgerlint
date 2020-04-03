@@ -5,7 +5,7 @@ function test_ledgerlint() {
   args=$2
 
   echo "CASE ${spec_case}:"
-  diff "fixtures/${spec_case}-output.txt" <(./ledgerlint -f fixtures/${spec_case}.ledger ${args})
+  diff "fixtures/${spec_case}.expected.txt" <(./ledgerlint -f fixtures/${spec_case}.ledger ${args})
   if [ $? -eq 0 ]; then
     echo -e "\tPASSED"
   else
