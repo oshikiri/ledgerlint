@@ -1,0 +1,9 @@
+title: "ledgerlint"
+description: A linter for ledger transactions
+url: "https://oshikiri.github.io/ledgerlint"
+
+theme: minima
+
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
