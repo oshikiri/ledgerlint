@@ -1,6 +1,8 @@
 ledgerlint: a linter for ledger transaction
 =====
 
+[![Build Status](https://github.com/oshikiri/ledgerlint/workflows/Go/badge.svg)](https://github.com/oshikiri/ledgerlint/actions?query=workflow%3AGo) [![go report](https://goreportcard.com/badge/github.com/oshikiri/ledgerlint)](https://goreportcard.com/report/github.com/oshikiri/ledgerlint) [![release](https://img.shields.io/github/v/release/oshikiri/ledgerlint.svg)](https://github.com/oshikiri/ledgerlint/releases/latest)
+
 ```sh
 $ cat fixtures/imbalance.ledger
 2020-03-26 * toilet paper
