@@ -1,6 +1,6 @@
 ---
 layout: home
-title: "ledgerlint: A linter for ledger transactions"
+title: "ledgerlint: a linter for ledger transactions"
 ---
 
 ## Installation
@@ -15,10 +15,14 @@ ledgerlint -h
 ```
 
 ## Links
-
+### This project
 - GitHub pages
   - <https://oshikiri.github.io/ledgerlint/>
-  - <https://git.io/ledgerlint>
-- Repositories
-  - [ledgerlint](https://github.com/oshikiri/ledgerlint)
-  - [vscode-ledgerlint](https://github.com/oshikiri/vscode-ledgerlint)
+  - <https://git.io/ledgerlint> (short url)
+- [ledgerlint repository](https://github.com/oshikiri/ledgerlint)
+- [vscode-ledgerlint repository](https://github.com/oshikiri/vscode-ledgerlint)
+
+### plaintext accounting
+- <https://plaintextaccounting.org/>
+- <https://www.ledger-cli.org/>
+- <https://hledger.org/>
