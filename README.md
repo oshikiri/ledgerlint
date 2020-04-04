@@ -13,30 +13,17 @@ $ ledgerlint -f fixtures/imbalance.ledger
 fixtures/imbalance.ledger:1 imbalanced transaction, (total amount) = -1800 JPY
 ```
 
-ledgerlint checks
-
-- imbalanced transactions
-- unknown account names
-
-See `ledgerlint -h` for details.
-
 If you use vscode, see [vscode-ledgerlint].
 
 [vscode-ledgerlint]: https://github.com/oshikiri/vscode-ledgerlint
 
 ## Installation
-### From binary
-
-See <https://github.com/oshikiri/ledgerlint/releases>
-
-### From source code
 
 ```sh
-go get github.com/oshikiri/ledgerlint
-go install github.com/oshikiri/ledgerlint
+./docs/install.bash
 ```
 
-and then add `~/go/bin` to `$PATH`.
+See also <https://github.com/oshikiri/ledgerlint/releases/latest>
 
 ## Development
 ```sh
@@ -46,6 +33,15 @@ go build
 # Run tests
 go test
 ```
+
+Install from source code:
+
+```sh
+go get github.com/oshikiri/ledgerlint
+go install github.com/oshikiri/ledgerlint
+```
+
+and then add `~/go/bin` to `$PATH`.
 
 ## License
 
