@@ -85,3 +85,19 @@ var transactionsImbalancedMultiCurrency = Transaction{
 		},
 	},
 }
+
+var transactionDollar = Transaction{
+	date: "2020/03/26",
+	postings: []Posting{
+		{
+			account:  "Expences:Household essentials",
+			amount:   1.23,
+			currency: "$",
+		},
+		{
+			account:  "Assets:Cash",
+			amount:   -1.24,
+			currency: "$",
+		},
+	},
+}

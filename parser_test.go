@@ -53,6 +53,10 @@ func TestReadFixtures(t *testing.T) {
 			"balanced-empty-amount",
 			transactionsBalancedEmptyAmount,
 		},
+		{
+			"dollar-mark",
+			transactionDollar,
+		},
 	}
 
 	for _, fixture := range fixtures {
