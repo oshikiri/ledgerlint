@@ -11,7 +11,7 @@ type Date string
 type TransactionStatus string
 
 // Amount for transaction posting, without currency
-type Amount int
+type Amount float64
 
 // Transaction contains its meta data and array of posting
 type Transaction struct {
