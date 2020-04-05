@@ -12,8 +12,8 @@ func getFixturePath(caseName string) string {
 }
 
 func TestRegexPatternPosting(t *testing.T) {
-	postingStr := "  Expences:Household essentials  200 JPY ; some comments"
-	expected := []string{"Expences:Household essentials", "200", "JPY"}
+	postingStr := "  Expenses:Household essentials  200 JPY ; some comments"
+	expected := []string{"Expenses:Household essentials", "200", "JPY"}
 
 	actual := postingPattern.FindStringSubmatch(postingStr)[1:]
 	if len(actual) != len(expected) || !reflect.DeepEqual(actual, expected) {

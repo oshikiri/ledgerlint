@@ -6,7 +6,7 @@ ledgerlint: a linter for ledger transaction
 ```sh
 $ cat fixtures/imbalance.ledger
 2020-03-26 * toilet paper
-  Expences:Household essentials    200 JPY
+  Expenses:Household essentials    200 JPY
   Assets:Cash                    -2000 JPY
 
 $ ledgerlint -f fixtures/imbalance.ledger

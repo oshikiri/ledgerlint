@@ -6,12 +6,12 @@ var transactionsBalanced = Transaction{
 	description: "super market",
 	postings: []Posting{
 		{
-			account:  "Expences:Household essentials",
+			account:  "Expenses:Household essentials",
 			amount:   200,
 			currency: "JPY",
 		},
 		{
-			account:  "Expences:Food",
+			account:  "Expenses:Food",
 			amount:   600,
 			currency: "JPY",
 		},
@@ -29,12 +29,12 @@ var transactionsBalancedEmptyAmount = Transaction{
 	description: "super market",
 	postings: []Posting{
 		{
-			account:  "Expences:Household essentials",
+			account:  "Expenses:Household essentials",
 			amount:   200,
 			currency: "JPY",
 		},
 		{
-			account:  "Expences:Food",
+			account:  "Expenses:Food",
 			amount:   600,
 			currency: "JPY",
 		},
@@ -51,7 +51,7 @@ var transactionsImbalanced = Transaction{
 	description: "toilet paper",
 	postings: []Posting{
 		{
-			account:  "Expences:Household essentials",
+			account:  "Expenses:Household essentials",
 			amount:   200,
 			currency: "JPY",
 		},
@@ -69,12 +69,12 @@ var transactionsImbalancedMultiCurrency = Transaction{
 	description: "at super market",
 	postings: []Posting{
 		{
-			account:  "Expences:Food",
+			account:  "Expenses:Food",
 			amount:   1000,
 			currency: "JPY",
 		},
 		{
-			account:  "Expences:Household essentials",
+			account:  "Expenses:Household essentials",
 			amount:   200,
 			currency: "USD",
 		},
