@@ -12,7 +12,7 @@ func getFixturePath(caseName string) string {
 }
 
 func TestRegexPatternPosting(t *testing.T) {
-	postingStr := "  Expenses:Household essentials  200 JPY ; some comments"
+	postingStr := "  Expenses:Household essentials    200 JPY ; some comments"
 	expected := []string{"Expenses:Household essentials", "200", "JPY"}
 
 	actual := postingPattern.FindStringSubmatch(postingStr)[1:]
