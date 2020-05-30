@@ -1,31 +1,64 @@
 package main
 
-import "strings"
+import (
+	"errors"
+	"fmt"
+	"strings"
+)
 
 func lintTransactionFile(filePath, accountsPath string) {
-	validator := newValidator(filePath, accountsPath)
-
-	countNewlines := 1
 	transactionsStr, err := readFileContent(filePath)
 	if err != nil {
 		panic(err)
 	}
 
-	transactionStrs := strings.Split(transactionsStr, "\n\n")
-	for _, transactionStr := range transactionStrs {
-		countNewlinesOld := countNewlines
-		countNewlines += strings.Count(transactionStr, "\n") + 2
+	var transaction Transaction
+	validator := newValidator(filePath, accountsPath)
+	transactionHeaderIdx := 1
 
-		transaction, err := parseTransactionStr(transactionStr)
-		if err != nil {
-			validator.warnParseFailed(countNewlinesOld, err)
+	for iLine, line := range strings.Split(transactionsStr, "\n") {
+		// When the line is empty, skip it
+		if commentOrEmptyPattern.MatchString(line) {
 			continue
 		}
 
-		validator.checkBalancing(countNewlinesOld, transaction)
+		// When the line is a transaction header, validate and clear transaction
+		transactionNext, headerParseError := parseTransactionHeader(line)
+		if headerParseError == nil {
+			validator.checkBalancing(transactionHeaderIdx, transaction)
 
-		for i, posting := range transaction.postings {
-			validator.checkUnknownAccount(countNewlinesOld+i+1, posting)
+			for i, posting := range transaction.postings {
+				validator.checkUnknownAccount(transactionHeaderIdx+i+1, posting)
+			}
+
+			transaction = transactionNext
+			transactionHeaderIdx = iLine + 1
+			continue
 		}
+
+		// When the line is a posting, append it to transaction.postings
+		postingParseSucceed, posting := parsePostingStr(line)
+		if postingParseSucceed {
+			transaction.postings = append(transaction.postings, posting)
+			continue
+		}
+
+		if transaction.date != "" {
+			postingParseError := errors.New(fmt.Sprintf("parsePostingStr is failed: '%v'", line))
+			validator.warnParseFailed(transactionHeaderIdx, postingParseError)
+			continue
+		}
+
+		// When the line is neither header or posting, return "Header unmatched" for compatibility
+		if transaction.date == "" {
+			err := errors.New("Header unmatched")
+			validator.warnParseFailed(transactionHeaderIdx, err)
+		}
+	}
+
+	validator.checkBalancing(transactionHeaderIdx, transaction)
+
+	for i, posting := range transaction.postings {
+		validator.checkUnknownAccount(transactionHeaderIdx+i+1, posting)
 	}
 }
