@@ -2,30 +2,20 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 // FIXME: suspicious parsing logic
 var commentOrEmptyPattern = regexp.MustCompile(`^\s*(?:;|$)`)
 var headerPattern = regexp.MustCompile(`^(~|\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
 var postingPattern = regexp.MustCompile(`\s{2,}([^;]+\S)\s{2,}(-?\s?\d+)\s([\w^;]+)`)
+var postingPatternWithCurrencyMark = regexp.MustCompile(`\s{2,}([^;]+\S)\s{2,}(\$)(-?\s?\d+)`)
 var postingEmptyAmountPattern = regexp.MustCompile(`\s{2,}([^;]+)`)
 
 func parsePostingStr(s string) (bool, Posting) {
 	m := postingPattern.FindStringSubmatch(s)
-	if len(m) == 0 { // empty amount
-		m := postingEmptyAmountPattern.FindStringSubmatch(s)
-		if len(m) == 2 {
-			p := Posting{
-				account:     m[1],
-				emptyAmount: true,
-			}
-			return true, p
-		}
-	} else if len(m) == 4 { // non-empty amount
+	if len(m) == 4 { // non-empty amount
 		amount, err := strconv.Atoi(m[2])
 		if err == nil {
 			p := Posting{
@@ -37,41 +27,37 @@ func parsePostingStr(s string) (bool, Posting) {
 			return true, p
 		}
 	}
+
+	m = postingPatternWithCurrencyMark.FindStringSubmatch(s)
+	if len(m) == 4 {
+		amount, err := strconv.Atoi(m[3])
+		if err == nil {
+			p := Posting{
+				account:     m[1],
+				amount:      Amount(amount),
+				currency:    m[2],
+				emptyAmount: false,
+			}
+			return true, p
+		}
+	}
+
+	if len(m) == 0 { // empty amount
+		m := postingEmptyAmountPattern.FindStringSubmatch(s)
+		if len(m) == 2 {
+			p := Posting{
+				account:     m[1],
+				emptyAmount: true,
+			}
+			return true, p
+		}
+	}
+
 	return false, Posting{}
 }
 
-func parsePostingStrs(postingStrs []string) ([]Posting, error) {
-	postings := []Posting{}
-
-	for _, postingStr := range postingStrs {
-		if commentOrEmptyPattern.MatchString(postingStr) {
-			continue
-		}
-		succeed, posting := parsePostingStr(postingStr)
-		if succeed {
-			postings = append(postings, posting)
-		} else {
-			msg := fmt.Sprintf("parsePostingStr is failed: '%v'", postingStr)
-			return nil, errors.New(msg)
-		}
-	}
-
-	return postings, nil
-}
-
-func parseTransactionStr(s string) (Transaction, error) {
-	lines := strings.Split(s, "\n")
-	i := 0
-
-	// Skip comment or empty lines
-	for _, line := range lines {
-		if !commentOrEmptyPattern.MatchString(line) {
-			break
-		}
-		i++
-	}
-
-	matched := headerPattern.FindStringSubmatch(lines[i])
+func parseTransactionHeader(line string) (Transaction, error) {
+	matched := headerPattern.FindStringSubmatch(line)
 	if len(matched) == 0 {
 		return Transaction{}, errors.New("Header unmatched")
 	}
@@ -84,10 +70,5 @@ func parseTransactionStr(s string) (Transaction, error) {
 		postings:    []Posting{},
 	}
 
-	postings, err := parsePostingStrs(lines[(i + 1):])
-	if err != nil {
-		return Transaction{}, err
-	}
-	t.postings = postings
 	return t, nil
 }

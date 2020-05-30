@@ -1,1 +1,0 @@
-fixtures/nonewline.ledger:1 parsePostingStr is failed: '2020-03-26 * super market'
