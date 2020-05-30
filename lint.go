@@ -11,18 +11,21 @@ func lintTransactionFile(filePath, accountsPath string) {
 		panic(err)
 	}
 
-	for _, transactionStr := range strings.Split(transactionsStr, "\n\n") {
-		transaction, err := parseTransactionStr(transactionStr)
-		if err == nil {
-			validator.checkBalancing(countNewlines, transaction)
+	transactionStrs := strings.Split(transactionsStr, "\n\n")
+	for _, transactionStr := range transactionStrs {
+		countNewlinesOld := countNewlines
+		countNewlines += strings.Count(transactionStr, "\n") + 2
 
-			for i, posting := range transaction.postings {
-				validator.checkUnknownAccount(countNewlines+i+1, posting)
-			}
-		} else {
-			validator.warnParseFailed(countNewlines, err)
+		transaction, err := parseTransactionStr(transactionStr)
+		if err != nil {
+			validator.warnParseFailed(countNewlinesOld, err)
+			continue
 		}
 
-		countNewlines += strings.Count(transactionStr, "\n") + 2
+		validator.checkBalancing(countNewlinesOld, transaction)
+
+		for i, posting := range transaction.postings {
+			validator.checkUnknownAccount(countNewlinesOld+i+1, posting)
+		}
 	}
 }
