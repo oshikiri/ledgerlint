@@ -44,7 +44,7 @@ func lintTransactionFile(filePath, accountsPath string) {
 		}
 
 		if transaction.date != "" {
-			postingParseError := errors.New(fmt.Sprintf("parsePostingStr is failed: '%v'", line))
+			postingParseError := fmt.Errorf("parsePostingStr is failed: '%v'", line)
 			validator.warnParseFailed(transactionHeaderIdx, postingParseError)
 			continue
 		}
