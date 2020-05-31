@@ -15,7 +15,7 @@ func isZeroAmount(amounts map[string]Amount) bool {
 	return true
 }
 
-func buildImbalancedTransactionMsg(
+func calculateTotalAmount(
 	amounts map[string]Amount,
 ) string {
 	currencies := make([]string, 0, len(amounts))
@@ -30,11 +30,8 @@ func buildImbalancedTransactionMsg(
 		amountAndCurrency := fmt.Sprintf("%v %v", amount, currency)
 		amountStrs = append(amountStrs, amountAndCurrency)
 	}
-	msg := fmt.Sprintf(
-		"imbalanced transaction, (total amount) = %v",
-		strings.ReplaceAll(strings.Join(amountStrs, " + "), "+ -", "- "),
-	)
-	return msg
+
+	return strings.ReplaceAll(strings.Join(amountStrs, " + "), "+ -", "- ")
 }
 
 func newValidator(filePath, accountsPath string) *Validator {
@@ -85,7 +82,7 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 	} else if !(isZeroAmount(totalAmount) || containsOneEmptyAmount) {
 		validator.warnParseFailed(
 			countNewlines,
-			fmt.Errorf(buildImbalancedTransactionMsg(totalAmount)),
+			fmt.Errorf("imbalanced transaction, (total amount) = %v", calculateTotalAmount(totalAmount)),
 		)
 	}
 }
