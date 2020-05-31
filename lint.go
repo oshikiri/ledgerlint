@@ -1,8 +1,6 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -44,15 +42,13 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 		}
 
 		if transaction.date != "" {
-			postingParseError := fmt.Errorf("parsePostingStr is failed: '%v'", line)
-			validator.warnParseFailed(transactionHeaderIdx, postingParseError)
+			validator.warnPostingParse(transactionHeaderIdx, line)
 			continue
 		}
 
 		// When the line is neither header or posting, return "Header unmatched" for compatibility
 		if transaction.date == "" {
-			err := errors.New("Header unmatched")
-			validator.warnParseFailed(transactionHeaderIdx, err)
+			validator.warnHeaderUnmatched(transactionHeaderIdx)
 		}
 	}
 

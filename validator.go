@@ -89,6 +89,14 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 	}
 }
 
+func (validator *Validator) warnHeaderUnmatched(countNewlines int) {
+	validator.warnParseFailed(countNewlines, fmt.Errorf("Header unmatched"))
+}
+
+func (validator *Validator) warnPostingParse(countNewlines int, line string) {
+	validator.warnParseFailed(countNewlines, fmt.Errorf("parsePostingStr is failed: '%v'", line))
+}
+
 func (validator *Validator) warnParseFailed(countNewlines int, err error) {
 	parseFailedMsg := ""
 	if validator.outputJSON {
