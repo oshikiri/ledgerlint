@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-// FIXME: suspicious parsing logic
+// FIXME: dirty parsing logic https://github.com/oshikiri/ledgerlint/issues/18
 var commentOrEmptyPattern = regexp.MustCompile(`^\s*(?:;|$)`)
 var headerPattern = regexp.MustCompile(`^(~|\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
 var postingPattern = regexp.MustCompile(`\s{2,}([^;]+\S)\s{2,}(-?\s?\d+)\s([\w^;]+)`)
@@ -42,15 +42,14 @@ func parsePostingStr(s string) (bool, Posting) {
 		}
 	}
 
-	if len(m) == 0 { // empty amount
-		m := postingEmptyAmountPattern.FindStringSubmatch(s)
-		if len(m) == 2 {
-			p := Posting{
-				account:     m[1],
-				emptyAmount: true,
-			}
-			return true, p
+	// empty amount
+	m = postingEmptyAmountPattern.FindStringSubmatch(s)
+	if len(m) == 2 {
+		p := Posting{
+			account:     m[1],
+			emptyAmount: true,
 		}
+		return true, p
 	}
 
 	return false, Posting{}
