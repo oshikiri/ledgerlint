@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -13,10 +14,31 @@ func isZeroAmount(amounts map[string]Amount) bool {
 	}
 	return true
 }
-func newValidator(filePath, accountsPath string) *Validator {
+
+func calculateTotalAmount(
+	amounts map[string]Amount,
+) string {
+	currencies := make([]string, 0, len(amounts))
+	for currency := range amounts {
+		currencies = append(currencies, currency)
+	}
+	sort.Strings(currencies)
+
+	amountStrs := []string{}
+	for _, currency := range currencies {
+		amount := amounts[currency]
+		amountAndCurrency := fmt.Sprintf("%v %v", amount, currency)
+		amountStrs = append(amountStrs, amountAndCurrency)
+	}
+
+	return strings.ReplaceAll(strings.Join(amountStrs, " + "), "+ -", "- ")
+}
+
+func newValidator(filePath, accountsPath string, outputJSON bool) *Validator {
 	validator := Validator{
 		filePath:     filePath,
 		accountsPath: accountsPath,
+		outputJSON:   outputJSON,
 	}
 
 	if accountsPath != "" {
@@ -38,6 +60,7 @@ func newValidator(filePath, accountsPath string) *Validator {
 type Validator struct {
 	filePath      string
 	accountsPath  string
+	outputJSON    bool
 	knownAccounts map[string]bool // values are not used
 }
 
@@ -45,8 +68,10 @@ func (validator *Validator) checkUnknownAccount(countNewlines int, posting Posti
 	if len(validator.knownAccounts) > 0 {
 		_, exists := validator.knownAccounts[posting.account]
 		if !exists {
-			unknownAccountMsg := "%v:%v unknown account: %v\n"
-			fmt.Printf(unknownAccountMsg, validator.filePath, countNewlines, posting.account)
+			validator.warnParseFailed(
+				countNewlines,
+				fmt.Errorf("unknown account: %v", posting.account),
+			)
 		}
 	}
 }
@@ -55,18 +80,22 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 	containsOneEmptyAmount, totalAmount, err := transaction.calculateTotalAmount()
 
 	if err != nil {
-		fmt.Printf("%v:%v %v\n", validator.filePath, countNewlines, err)
+		validator.warnParseFailed(countNewlines, err)
 	} else if !(isZeroAmount(totalAmount) || containsOneEmptyAmount) {
-		imbalancedTransactionMsg := buildImbalancedTransactionMsg(
-			validator.filePath,
+		validator.warnParseFailed(
 			countNewlines,
-			totalAmount,
+			fmt.Errorf("imbalanced transaction, (total amount) = %v", calculateTotalAmount(totalAmount)),
 		)
-		fmt.Println(imbalancedTransactionMsg)
 	}
 }
 
 func (validator *Validator) warnParseFailed(countNewlines int, err error) {
-	parseFailedMsg := "%v:%v %v\n"
+	parseFailedMsg := ""
+	if validator.outputJSON {
+		parseFailedMsg = `{"file_path":"%v","line_number":%v,"error_message":"%v"}`
+	} else {
+		parseFailedMsg = "%v:%v %v"
+	}
+	parseFailedMsg += "\n"
 	fmt.Printf(parseFailedMsg, validator.filePath, countNewlines, err)
 }
