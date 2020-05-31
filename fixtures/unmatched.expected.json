@@ -1,1 +1,1 @@
-{"file_path":"fixtures/unmatched.ledger","line_number":1,"error_message":"Header unmatched"}
+{"file_path":"fixtures/unmatched.ledger","line_number":1,"level":"WARN","error_message":"Header unmatched"}
