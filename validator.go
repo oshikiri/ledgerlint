@@ -70,6 +70,7 @@ func (validator *Validator) checkUnknownAccount(countNewlines int, posting Posti
 		if !exists {
 			validator.warnParseFailed(
 				countNewlines,
+				"WARN",
 				fmt.Errorf("unknown account: %v", posting.account),
 			)
 		}
@@ -80,30 +81,31 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 	containsOneEmptyAmount, totalAmount, err := transaction.calculateTotalAmount()
 
 	if err != nil {
-		validator.warnParseFailed(countNewlines, err)
+		validator.warnParseFailed(countNewlines, "ERROR", err)
 	} else if !(isZeroAmount(totalAmount) || containsOneEmptyAmount) {
 		validator.warnParseFailed(
 			countNewlines,
+			"ERROR",
 			fmt.Errorf("imbalanced transaction, (total amount) = %v", calculateTotalAmount(totalAmount)),
 		)
 	}
 }
 
 func (validator *Validator) warnHeaderUnmatched(countNewlines int) {
-	validator.warnParseFailed(countNewlines, fmt.Errorf("Header unmatched"))
+	validator.warnParseFailed(countNewlines, "WARN", fmt.Errorf("Header unmatched"))
 }
 
 func (validator *Validator) warnPostingParse(countNewlines int, line string) {
-	validator.warnParseFailed(countNewlines, fmt.Errorf("parsePostingStr is failed: '%v'", line))
+	validator.warnParseFailed(countNewlines, "WARN", fmt.Errorf("parsePostingStr is failed: '%v'", line))
 }
 
-func (validator *Validator) warnParseFailed(countNewlines int, err error) {
+func (validator *Validator) warnParseFailed(countNewlines int, logLevel string, err error) {
 	parseFailedMsg := ""
 	if validator.outputJSON {
-		parseFailedMsg = `{"file_path":"%v","line_number":%v,"error_message":"%v"}`
+		parseFailedMsg = `{"file_path":"%v","line_number":%v,"level":"%v","error_message":"%v"}` + "\n"
+		fmt.Printf(parseFailedMsg, validator.filePath, countNewlines, logLevel, err)
 	} else {
-		parseFailedMsg = "%v:%v %v"
+		parseFailedMsg = "%v:%v %v\n"
+		fmt.Printf(parseFailedMsg, validator.filePath, countNewlines, err)
 	}
-	parseFailedMsg += "\n"
-	fmt.Printf(parseFailedMsg, validator.filePath, countNewlines, err)
 }
