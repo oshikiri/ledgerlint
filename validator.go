@@ -45,8 +45,10 @@ func (validator *Validator) checkUnknownAccount(countNewlines int, posting Posti
 	if len(validator.knownAccounts) > 0 {
 		_, exists := validator.knownAccounts[posting.account]
 		if !exists {
-			unknownAccountMsg := "%v:%v unknown account: %v\n"
-			fmt.Printf(unknownAccountMsg, validator.filePath, countNewlines, posting.account)
+			validator.warnParseFailed(
+				countNewlines,
+				fmt.Errorf("unknown account: %v", posting.account),
+			)
 		}
 	}
 }
@@ -55,14 +57,12 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 	containsOneEmptyAmount, totalAmount, err := transaction.calculateTotalAmount()
 
 	if err != nil {
-		fmt.Printf("%v:%v %v\n", validator.filePath, countNewlines, err)
+		validator.warnParseFailed(countNewlines, err)
 	} else if !(isZeroAmount(totalAmount) || containsOneEmptyAmount) {
-		imbalancedTransactionMsg := buildImbalancedTransactionMsg(
-			validator.filePath,
+		validator.warnParseFailed(
 			countNewlines,
-			totalAmount,
+			fmt.Errorf(buildImbalancedTransactionMsg(totalAmount)),
 		)
-		fmt.Println(imbalancedTransactionMsg)
 	}
 }
 

@@ -7,8 +7,6 @@ import (
 )
 
 func buildImbalancedTransactionMsg(
-	filePath string,
-	lineNumber int,
 	amounts map[string]Amount,
 ) string {
 	currencies := make([]string, 0, len(amounts))
@@ -23,11 +21,8 @@ func buildImbalancedTransactionMsg(
 		amountAndCurrency := fmt.Sprintf("%v %v", amount, currency)
 		amountStrs = append(amountStrs, amountAndCurrency)
 	}
-	imbalancedTransactionMsg := "%v:%v imbalanced transaction, (total amount) = %v"
 	msg := fmt.Sprintf(
-		imbalancedTransactionMsg,
-		filePath,
-		lineNumber,
+		"imbalanced transaction, (total amount) = %v",
 		strings.ReplaceAll(strings.Join(amountStrs, " + "), "+ -", "- "),
 	)
 	return msg
