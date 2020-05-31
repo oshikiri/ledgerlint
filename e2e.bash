@@ -7,10 +7,18 @@ function test_ledgerlint() {
   echo "CASE ${spec_case}:"
   diff "fixtures/${spec_case}.expected.txt" <(./ledgerlint -f fixtures/${spec_case}.ledger ${args})
   if [ $? -eq 0 ]; then
-    echo -e "\tPASSED"
+    echo -e "\tPASSED plaintext"
   else
     count_failed=$(($count_failed + 1))
-    echo -e "\tFAILED"
+    echo -e "\tFAILED plaintext"
+  fi
+
+  diff "fixtures/${spec_case}.expected.json" <(./ledgerlint -f fixtures/${spec_case}.ledger -j ${args})
+  if [ $? -eq 0 ]; then
+    echo -e "\tPASSED json"
+  else
+    count_failed=$(($count_failed + 1))
+    echo -e "\tFAILED json"
   fi
   echo -e ""
 }
