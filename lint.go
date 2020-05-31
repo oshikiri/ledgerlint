@@ -6,14 +6,14 @@ import (
 	"strings"
 )
 
-func lintTransactionFile(filePath, accountsPath string, outputJson bool) {
+func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 	transactionsStr, err := readFileContent(filePath)
 	if err != nil {
 		panic(err)
 	}
 
 	var transaction Transaction
-	validator := newValidator(filePath, accountsPath, outputJson)
+	validator := newValidator(filePath, accountsPath, outputJSON)
 	transactionHeaderIdx := 1
 
 	for iLine, line := range strings.Split(transactionsStr, "\n") {

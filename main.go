@@ -7,7 +7,7 @@ import (
 func main() {
 	var filePath = flag.String("f", "", "ledger/hledger transaction file")
 	var accountsPath = flag.String("account", "", "known accounts file")
-	var outputJson = flag.Bool("j", false, "output error message by JSON format or plaintext (default plaintext)")
+	var outputJSON = flag.Bool("j", false, "output error message by JSON format or plaintext (default plaintext)")
 	flag.Parse()
 
 	if *filePath == "" {
@@ -17,6 +17,6 @@ func main() {
 	lintTransactionFile(
 		*filePath,
 		*accountsPath,
-		*outputJson,
+		*outputJSON,
 	)
 }

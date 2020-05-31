@@ -34,11 +34,11 @@ func calculateTotalAmount(
 	return strings.ReplaceAll(strings.Join(amountStrs, " + "), "+ -", "- ")
 }
 
-func newValidator(filePath, accountsPath string, outputJson bool) *Validator {
+func newValidator(filePath, accountsPath string, outputJSON bool) *Validator {
 	validator := Validator{
 		filePath:     filePath,
 		accountsPath: accountsPath,
-		outputJson:   outputJson,
+		outputJSON:   outputJSON,
 	}
 
 	if accountsPath != "" {
@@ -60,7 +60,7 @@ func newValidator(filePath, accountsPath string, outputJson bool) *Validator {
 type Validator struct {
 	filePath      string
 	accountsPath  string
-	outputJson    bool
+	outputJSON    bool
 	knownAccounts map[string]bool // values are not used
 }
 
@@ -91,7 +91,7 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 
 func (validator *Validator) warnParseFailed(countNewlines int, err error) {
 	parseFailedMsg := ""
-	if validator.outputJson {
+	if validator.outputJSON {
 		parseFailedMsg = `{"file_path":"%v","line_number":%v,"error_message":"%v"}`
 	} else {
 		parseFailedMsg = "%v:%v %v"
