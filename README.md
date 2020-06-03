@@ -28,7 +28,7 @@ See also <https://github.com/oshikiri/ledgerlint/releases/latest>
 ## Development
 ```sh
 # Build and create a ./ledgerlint binary
-go build
+./build.bash
 
 # Run tests
 go test
