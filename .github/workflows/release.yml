@@ -3,6 +3,9 @@ on:
   push:
     tags:
     - "*"
+builds:
+  - ldflags:
+    - -X "main.version={{ .Version }}"
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
