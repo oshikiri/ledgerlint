@@ -59,14 +59,11 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 			continue
 		}
 
-		if transaction.date != "" {
-			validator.printer.warnPostingParse(transaction.headerIdx, line)
-			continue
-		}
-
-		// When the line is neither header or posting, return "Header unmatched" for compatibility
 		if transaction.date == "" {
+			// When the line is neither header or posting, return "Header unmatched" for compatibility
 			validator.printer.warnHeaderUnmatched(transaction.headerIdx)
+		} else {
+			validator.printer.warnPostingParse(transaction.headerIdx, line)
 		}
 	}
 
