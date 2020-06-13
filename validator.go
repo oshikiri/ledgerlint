@@ -96,11 +96,19 @@ func (validator *Validator) warnUnknownAccount(countNewlines int, account string
 }
 
 func (validator *Validator) warnHeaderUnmatched(countNewlines int) {
-	validator.warnParseFailed(countNewlines, "WARN", fmt.Errorf("Header unmatched"))
+	validator.warnParseFailed(
+		countNewlines,
+		"WARN",
+		fmt.Errorf("Header unmatched"),
+	)
 }
 
 func (validator *Validator) warnPostingParse(countNewlines int, line string) {
-	validator.warnParseFailed(countNewlines, "WARN", fmt.Errorf("parsePostingStr is failed: '%v'", line))
+	validator.warnParseFailed(
+		countNewlines,
+		"WARN",
+		fmt.Errorf("parsePostingStr is failed: '%v'", line),
+	)
 }
 
 func (validator *Validator) warnParseFailed(countNewlines int, logLevel string, err error) {
