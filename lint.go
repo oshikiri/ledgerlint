@@ -16,33 +16,39 @@ func readFileContent(filePath string) (string, error) {
 	return fileContent, nil
 }
 
+func checkBalancingAndAccounts(validator *Validator, transaction Transaction) {
+	transactionHeaderIdx := transaction.headerIdx
+	validator.checkBalancing(transactionHeaderIdx, transaction)
+
+	for i, posting := range transaction.postings {
+		validator.checkUnknownAccount(transactionHeaderIdx+i+1, posting)
+	}
+}
+
 func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 	transactionsStr, err := readFileContent(filePath)
 	if err != nil {
 		panic(err)
 	}
 
-	var transaction Transaction
+	transaction := Transaction{headerIdx: 1}
 	validator := newValidator(filePath, accountsPath, outputJSON)
-	transactionHeaderIdx := 1
+	iLine := 0
 
-	for iLine, line := range strings.Split(transactionsStr, "\n") {
+	for _, line := range strings.Split(transactionsStr, "\n") {
+		iLine++
+
 		// When the line is empty, skip it
 		if commentOrEmptyPattern.MatchString(line) {
 			continue
 		}
 
 		// When the line is a transaction header, validate and clear transaction
-		transactionNext, headerParseError := parseTransactionHeader(line)
+		transactionNext, headerParseError := parseTransactionHeader(iLine, line)
 		if headerParseError == nil {
-			validator.checkBalancing(transactionHeaderIdx, transaction)
-
-			for i, posting := range transaction.postings {
-				validator.checkUnknownAccount(transactionHeaderIdx+i+1, posting)
-			}
+			checkBalancingAndAccounts(validator, transaction)
 
 			transaction = transactionNext
-			transactionHeaderIdx = iLine + 1
 			continue
 		}
 
@@ -54,19 +60,15 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 		}
 
 		if transaction.date != "" {
-			validator.printer.warnPostingParse(transactionHeaderIdx, line)
+			validator.printer.warnPostingParse(transaction.headerIdx, line)
 			continue
 		}
 
 		// When the line is neither header or posting, return "Header unmatched" for compatibility
 		if transaction.date == "" {
-			validator.printer.warnHeaderUnmatched(transactionHeaderIdx)
+			validator.printer.warnHeaderUnmatched(transaction.headerIdx)
 		}
 	}
 
-	validator.checkBalancing(transactionHeaderIdx, transaction)
-
-	for i, posting := range transaction.postings {
-		validator.checkUnknownAccount(transactionHeaderIdx+i+1, posting)
-	}
+	checkBalancingAndAccounts(validator, transaction)
 }

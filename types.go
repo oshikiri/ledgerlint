@@ -19,6 +19,7 @@ type Transaction struct {
 	status      TransactionStatus
 	description string
 	postings    []Posting
+	headerIdx   int
 }
 
 // calculateTotalAmount returns (containsOneEmptyAmount, totalAmount)

@@ -55,7 +55,7 @@ func parsePostingStr(s string) (bool, Posting) {
 	return false, Posting{}
 }
 
-func parseTransactionHeader(line string) (Transaction, error) {
+func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
 	matched := headerPattern.FindStringSubmatch(line)
 	if len(matched) == 0 {
 		return Transaction{}, errors.New("Header unmatched")
@@ -67,6 +67,7 @@ func parseTransactionHeader(line string) (Transaction, error) {
 		status:      TransactionStatus(header[1]),
 		description: header[2],
 		postings:    []Posting{},
+		headerIdx:   headerIdx,
 	}
 
 	return t, nil
