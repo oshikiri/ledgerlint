@@ -26,7 +26,7 @@ func isZeroAmount(amounts map[string]Amount) bool {
 	return true
 }
 
-func calculateTotalAmount(
+func totalAmountStr(
 	amounts map[string]Amount,
 ) string {
 	currencies := make([]string, 0, len(amounts))
@@ -95,7 +95,7 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 		validator.printer.print(
 			countNewlines,
 			"ERROR",
-			fmt.Errorf("imbalanced transaction, (total amount) = %v", calculateTotalAmount(totalAmount)),
+			fmt.Errorf("imbalanced transaction, (total amount) = %v", totalAmountStr(totalAmount)),
 		)
 	}
 }
