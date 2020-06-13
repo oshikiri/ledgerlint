@@ -112,12 +112,11 @@ func (validator *Validator) warnPostingParse(countNewlines int, line string) {
 }
 
 func (validator *Validator) warnParseFailed(countNewlines int, logLevel string, err error) {
-	parseFailedMsg := ""
 	if validator.outputJSON {
-		parseFailedMsg = `{"file_path":"%v","line_number":%v,"level":"%v","error_message":"%v"}` + "\n"
+		parseFailedMsg := `{"file_path":"%v","line_number":%v,"level":"%v","error_message":"%v"}` + "\n"
 		fmt.Printf(parseFailedMsg, validator.filePath, countNewlines, logLevel, err)
 	} else {
-		parseFailedMsg = "%v:%v %v\n"
+		parseFailedMsg := "%v:%v %v\n"
 		fmt.Printf(parseFailedMsg, validator.filePath, countNewlines, err)
 	}
 }
