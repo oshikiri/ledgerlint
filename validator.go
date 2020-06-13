@@ -2,9 +2,20 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"sort"
 	"strings"
 )
+
+func readFileContent(filePath string) (string, error) {
+	bytes, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		fmt.Printf("ioutil.ReadFile failed: %v, filePath='%v'\n", err, filePath)
+		return "", err
+	}
+	fileContent := string(bytes)
+	return fileContent, nil
+}
 
 func isZeroAmount(amounts map[string]Amount) bool {
 	for _, v := range amounts {

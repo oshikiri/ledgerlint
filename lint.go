@@ -1,33 +1,28 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io/ioutil"
-	"strings"
+	"os"
 )
 
-func readFileContent(filePath string) (string, error) {
-	bytes, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		fmt.Printf("ioutil.ReadFile failed: %v, filePath='%v'\n", err, filePath)
-		return "", err
-	}
-	fileContent := string(bytes)
-	return fileContent, nil
-}
-
 func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
-	transactionsStr, err := readFileContent(filePath)
+	file, err := os.Open(filePath)
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
 
 	transaction := Transaction{headerIdx: 1}
 	validator := newValidator(filePath, accountsPath, outputJSON)
-	iLine := 0
 
-	for _, line := range strings.Split(transactionsStr, "\n") {
-		iLine++
+	for iLine := 1; scanner.Scan(); iLine++ {
+		if err := scanner.Err(); err != nil {
+			fmt.Printf("Scanner failed: %v\n", err)
+			break
+		}
+		line := scanner.Text()
 
 		// When the line is empty, skip it
 		if commentOrEmptyPattern.MatchString(line) {
