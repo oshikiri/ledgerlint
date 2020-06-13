@@ -16,15 +16,6 @@ func readFileContent(filePath string) (string, error) {
 	return fileContent, nil
 }
 
-func checkBalancingAndAccounts(validator *Validator, transaction Transaction) {
-	transactionHeaderIdx := transaction.headerIdx
-	validator.checkBalancing(transactionHeaderIdx, transaction)
-
-	for i, posting := range transaction.postings {
-		validator.checkUnknownAccount(transactionHeaderIdx+i+1, posting)
-	}
-}
-
 func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 	transactionsStr, err := readFileContent(filePath)
 	if err != nil {
@@ -46,8 +37,7 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 		// When the line is a transaction header, validate and clear transaction
 		transactionNext, headerParseError := parseTransactionHeader(iLine, line)
 		if headerParseError == nil {
-			checkBalancingAndAccounts(validator, transaction)
-
+			validator.checkBalancingAndAccounts(transaction)
 			transaction = transactionNext
 			continue
 		}
@@ -67,5 +57,5 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 		}
 	}
 
-	checkBalancingAndAccounts(validator, transaction)
+	validator.checkBalancingAndAccounts(transaction)
 }

@@ -88,3 +88,12 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 		)
 	}
 }
+
+func (validator *Validator) checkBalancingAndAccounts(transaction Transaction) {
+	transactionHeaderIdx := transaction.headerIdx
+	validator.checkBalancing(transactionHeaderIdx, transaction)
+
+	for i, posting := range transaction.postings {
+		validator.checkUnknownAccount(transactionHeaderIdx+i+1, posting)
+	}
+}
