@@ -68,11 +68,7 @@ func (validator *Validator) checkUnknownAccount(countNewlines int, posting Posti
 	if len(validator.knownAccounts) > 0 {
 		_, exists := validator.knownAccounts[posting.account]
 		if !exists {
-			validator.warnParseFailed(
-				countNewlines,
-				"WARN",
-				fmt.Errorf("unknown account: %v", posting.account),
-			)
+			validator.warnUnknownAccount(countNewlines, posting.account)
 		}
 	}
 }
@@ -89,6 +85,14 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 			fmt.Errorf("imbalanced transaction, (total amount) = %v", calculateTotalAmount(totalAmount)),
 		)
 	}
+}
+
+func (validator *Validator) warnUnknownAccount(countNewlines int, account string) {
+	validator.warnParseFailed(
+		countNewlines,
+		"WARN",
+		fmt.Errorf("unknown account: %v", account),
+	)
 }
 
 func (validator *Validator) warnHeaderUnmatched(countNewlines int) {
