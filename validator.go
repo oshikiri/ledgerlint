@@ -35,10 +35,13 @@ func calculateTotalAmount(
 }
 
 func newValidator(filePath, accountsPath string, outputJSON bool) *Validator {
+	printer := Printer{
+		filePath:   filePath,
+		outputJSON: outputJSON,
+	}
 	validator := Validator{
-		filePath:     filePath,
 		accountsPath: accountsPath,
-		outputJSON:   outputJSON,
+		printer:      printer,
 	}
 
 	if accountsPath != "" {
@@ -58,9 +61,8 @@ func newValidator(filePath, accountsPath string, outputJSON bool) *Validator {
 
 // Validator checks transaction and posting, and print warning message if error is found.
 type Validator struct {
-	filePath      string
 	accountsPath  string
-	outputJSON    bool
+	printer       Printer
 	knownAccounts map[string]bool // values are not used
 }
 
@@ -68,7 +70,7 @@ func (validator *Validator) checkUnknownAccount(countNewlines int, posting Posti
 	if len(validator.knownAccounts) > 0 {
 		_, exists := validator.knownAccounts[posting.account]
 		if !exists {
-			validator.warnUnknownAccount(countNewlines, posting.account)
+			validator.printer.warnUnknownAccount(countNewlines, posting.account)
 		}
 	}
 }
@@ -77,46 +79,12 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 	containsOneEmptyAmount, totalAmount, err := transaction.calculateTotalAmount()
 
 	if err != nil {
-		validator.warnParseFailed(countNewlines, "ERROR", err)
+		validator.printer.print(countNewlines, "ERROR", err)
 	} else if !(isZeroAmount(totalAmount) || containsOneEmptyAmount) {
-		validator.warnParseFailed(
+		validator.printer.print(
 			countNewlines,
 			"ERROR",
 			fmt.Errorf("imbalanced transaction, (total amount) = %v", calculateTotalAmount(totalAmount)),
 		)
-	}
-}
-
-func (validator *Validator) warnUnknownAccount(countNewlines int, account string) {
-	validator.warnParseFailed(
-		countNewlines,
-		"WARN",
-		fmt.Errorf("unknown account: %v", account),
-	)
-}
-
-func (validator *Validator) warnHeaderUnmatched(countNewlines int) {
-	validator.warnParseFailed(
-		countNewlines,
-		"WARN",
-		fmt.Errorf("Header unmatched"),
-	)
-}
-
-func (validator *Validator) warnPostingParse(countNewlines int, line string) {
-	validator.warnParseFailed(
-		countNewlines,
-		"WARN",
-		fmt.Errorf("parsePostingStr is failed: '%v'", line),
-	)
-}
-
-func (validator *Validator) warnParseFailed(countNewlines int, logLevel string, err error) {
-	if validator.outputJSON {
-		parseFailedMsg := `{"file_path":"%v","line_number":%v,"level":"%v","error_message":"%v"}` + "\n"
-		fmt.Printf(parseFailedMsg, validator.filePath, countNewlines, logLevel, err)
-	} else {
-		parseFailedMsg := "%v:%v %v\n"
-		fmt.Printf(parseFailedMsg, validator.filePath, countNewlines, err)
 	}
 }
