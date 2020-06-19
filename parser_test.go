@@ -28,3 +28,53 @@ func TestRegexHeader(t *testing.T) {
 		t.Errorf("regex headerPattern should parse as %v but got %v", expected, actual)
 	}
 }
+
+func TestParsePostingStrWithoutCurrency(t *testing.T) {
+	succeed, actual := parsePostingStr("  Asset:Something  100")
+	expected := Posting{
+		account:     "Asset:Something",
+		amount:      100,
+		currency:    "",
+		emptyAmount: false,
+	}
+	if !succeed || !reflect.DeepEqual(actual, expected) {
+		// t.Errorf("%v", actual)
+	}
+}
+
+func TestParsePostingStrJPY(t *testing.T) {
+	succeed, actual := parsePostingStr("  Asset:Something  100 JPY")
+	expected := Posting{
+		account:     "Asset:Something",
+		amount:      100,
+		currency:    "JPY",
+		emptyAmount: false,
+	}
+	if !succeed || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("%v", actual)
+	}
+}
+
+func TestParsePostingStrDollar(t *testing.T) {
+	succeed, actual := parsePostingStr("  Asset:Something  $1")
+	expected := Posting{
+		account:     "Asset:Something",
+		amount:      1,
+		currency:    "$",
+		emptyAmount: false,
+	}
+	if !succeed || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("%v", actual)
+	}
+}
+
+func TestParsePostingStrEmpty(t *testing.T) {
+	succeed, actual := parsePostingStr("  Asset:Something")
+	expected := Posting{
+		account:     "Asset:Something",
+		emptyAmount: true,
+	}
+	if !succeed || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("%v", actual)
+	}
+}
