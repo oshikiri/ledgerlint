@@ -54,3 +54,25 @@ func TestParsePostingStrEmpty(t *testing.T) {
 		t.Errorf("succeed = %v, %v != %v", succeed, actual, expected)
 	}
 }
+
+func TestParseTransactionHeader(t *testing.T) {
+	actual, err := parseTransactionHeader(11, "2020-01-01 * some description")
+	expected := Transaction{
+		date:        "2020-01-01",
+		description: "some description",
+		status:      "*",
+		postings:    []Posting{},
+		headerIdx:   11,
+	}
+	if err != nil || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("%v, %v != %v", err, actual, expected)
+	}
+}
+
+func TestParseTransactionHeaderInvalid(t *testing.T) {
+	actual, err := parseTransactionHeader(11, "2020-01-01* some description")
+	expected := Transaction{}
+	if err == nil || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("%v", err)
+	}
+}
