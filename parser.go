@@ -20,10 +20,12 @@ func isDigit(c byte) bool {
 	return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
 }
 
+// TODO: Add currency code if needed
 func isCurrencyCode(c byte) bool {
 	return c == '$'
 }
 
+// TODO: tab?
 func isWhiteSpace(c byte) bool {
 	return c == ' '
 }
@@ -71,6 +73,7 @@ func parsePostingStr(s string) (bool, Posting) {
 		if s[j] == '-' {
 			j++
 		}
+		// TODO: decimal
 		for j < size && isDigit(s[j]) {
 			j++
 		}
