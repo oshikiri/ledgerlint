@@ -84,17 +84,16 @@ func parsePostingStr(s string) (bool, Posting) {
 		posting.amount = Amount(amount)
 		succeed = true
 	} else {
-		j := i
-		if s[j] == '-' {
-			j++
+		digitsStart := i
+		if s[i] == '-' {
+			i++
 		}
 		// TODO: decimal
-		for j < size && isDigit(s[j]) {
-			j++
+		for i < size && isDigit(s[i]) {
+			i++
 		}
-		amount, _ := strconv.Atoi(s[i:j])
+		amount, _ := strconv.Atoi(s[digitsStart:i])
 		posting.amount = Amount(amount)
-		i = j
 
 		if i < size {
 			i = consumeWhiteSpace(s, i)
