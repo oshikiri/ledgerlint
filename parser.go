@@ -135,10 +135,9 @@ func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
 	if iBefore == i {
 		if i == len(line) {
 			return t, nil
-		} else {
-			// it is invalid because non-whitespace character follows date string without whitespace
-			return Transaction{}, headerUnmatchedError
 		}
+		// it is invalid because non-whitespace character follows date string without whitespace
+		return Transaction{}, headerUnmatchedError
 	}
 
 	if isStatusSymbol(line[i]) {
