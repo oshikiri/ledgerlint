@@ -80,7 +80,7 @@ func parsePostingStr(s string) (bool, Posting) {
 	if isCurrencyCode(s[i]) {
 		posting.currency = string(s[i])
 		i++
-		amount, _ := strconv.Atoi(s[i:])
+		amount, _ := strconv.Atoi(s[i:]) // TODO: Error handling
 		posting.amount = Amount(amount)
 		succeed = true
 	} else {
@@ -92,7 +92,7 @@ func parsePostingStr(s string) (bool, Posting) {
 		for i < size && isDigit(s[i]) {
 			i++
 		}
-		amount, _ := strconv.Atoi(s[digitsStart:i])
+		amount, _ := strconv.Atoi(s[digitsStart:i]) // TODO: Error handling
 		posting.amount = Amount(amount)
 
 		if i < size {
@@ -136,6 +136,7 @@ func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
 		if i == len(line) {
 			return t, nil
 		} else {
+			// it is invalid because non-whitespace character follows date string without whitespace
 			return Transaction{}, headerUnmatchedError
 		}
 	}
