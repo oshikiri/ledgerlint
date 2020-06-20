@@ -11,7 +11,7 @@ var commentOrEmptyPattern = regexp.MustCompile(`^\s*(?:;|$)`)
 var headerPattern = regexp.MustCompile(`^(~|\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
 
 func consumeWhiteSpace(s string, i int) int {
-	for s[i] == ' ' {
+	for isWhiteSpace(s[i]) {
 		i++
 	}
 	return i
@@ -21,14 +21,23 @@ func isDigit(c byte) bool {
 	return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
 }
 
+func isCurrencyCode(c byte) bool {
+	return c == '$'
+}
+
+func isWhiteSpace(c byte) bool {
+	return c == ' '
+}
+
 func parsePostingStr(s string) (bool, Posting) {
 	size := len(s)
+	succeed := false
 
 	posting := Posting{}
 	i := consumeWhiteSpace(s, 0)
 
 	startAccount := i
-	for !(s[i] == ' ' && s[i+1] == ' ') {
+	for !(isWhiteSpace(s[i]) && isWhiteSpace(s[i+1])) {
 		i++
 		if i >= size {
 			break
@@ -43,13 +52,17 @@ func parsePostingStr(s string) (bool, Posting) {
 	posting.emptyAmount = false
 	i += 2
 
-	if s[i] == '$' {
-		posting.currency = "$"
+	if isCurrencyCode(s[i]) {
+		posting.currency = string(s[i])
 		i++
 		amount, _ := strconv.Atoi(s[i:])
 		posting.amount = Amount(amount)
+		succeed = true
 	} else {
 		j := i
+		if s[j] == '-' {
+			j++
+		}
 		for j < size && isDigit(s[j]) {
 			j++
 		}
@@ -60,10 +73,11 @@ func parsePostingStr(s string) (bool, Posting) {
 		if i < size {
 			i = consumeWhiteSpace(s, i)
 			posting.currency = s[i:]
+			succeed = true
 		}
 	}
 
-	return true, posting
+	return succeed, posting
 }
 
 func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
