@@ -17,6 +17,10 @@ func consumeWhiteSpace(s string, i int) int {
 	return i
 }
 
+func isDigit(c byte) bool {
+	return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
+}
+
 func parsePostingStr(s string) (bool, Posting) {
 	size := len(s)
 
@@ -46,7 +50,7 @@ func parsePostingStr(s string) (bool, Posting) {
 		posting.amount = Amount(amount)
 	} else {
 		j := i
-		for j < size && (s[j] == '0' || s[j] == '1') {
+		for j < size && isDigit(s[j]) {
 			j++
 		}
 		amount, _ := strconv.Atoi(s[i:j])
