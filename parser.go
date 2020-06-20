@@ -7,7 +7,6 @@ import (
 )
 
 // FIXME: dirty parsing logic https://github.com/oshikiri/ledgerlint/issues/18
-var commentOrEmptyPattern = regexp.MustCompile(`^\s*(?:;|$)`)
 var headerPattern = regexp.MustCompile(`^(~|\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
 
 func consumeWhiteSpace(s string, i int) int {
@@ -27,6 +26,15 @@ func isCurrencyCode(c byte) bool {
 
 func isWhiteSpace(c byte) bool {
 	return c == ' '
+}
+
+func isCommentOrEmpty(line string) bool {
+	if len(line) == 0 {
+		return true
+	}
+
+	i := consumeWhiteSpace(line, 0)
+	return len(line) == i || line[i] == ';'
 }
 
 func parsePostingStr(s string) (bool, Posting) {
