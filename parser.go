@@ -2,15 +2,18 @@ package main
 
 import (
 	"errors"
-	"regexp"
 	"strconv"
 )
 
-// FIXME: dirty parsing logic https://github.com/oshikiri/ledgerlint/issues/18
-var headerPattern = regexp.MustCompile(`^(~|\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
-
 func consumeWhiteSpace(s string, i int) int {
-	for isWhiteSpace(s[i]) {
+	for i < len(s) && isWhiteSpace(s[i]) {
+		i++
+	}
+	return i
+}
+
+func consumeNonComment(s string, i int) int {
+	for i < len(s) && !isCommentSymbol(s[i]) {
 		i++
 	}
 	return i
@@ -28,6 +31,18 @@ func isCurrencyCode(c byte) bool {
 // TODO: tab?
 func isWhiteSpace(c byte) bool {
 	return c == ' '
+}
+
+func isDateSeparator(c byte) bool {
+	return c == '/' || c == '-'
+}
+
+func isCommentSymbol(c byte) bool {
+	return c == ';'
+}
+
+func isStatusSymbol(c byte) bool {
+	return c == '!' || c == '*'
 }
 
 func isCommentOrEmpty(line string) bool {
@@ -92,19 +107,48 @@ func parsePostingStr(s string) (bool, Posting) {
 }
 
 func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
-	matched := headerPattern.FindStringSubmatch(line)
-	if len(matched) == 0 {
-		return Transaction{}, errors.New("Header unmatched")
+	headerUnmatchedError := errors.New("Header unmatched")
+
+	i := consumeWhiteSpace(line, 0)
+	if i > 0 {
+		return Transaction{}, headerUnmatchedError
 	}
 
-	header := matched[1:]
-	t := Transaction{
-		date:        Date(header[0]),
-		status:      TransactionStatus(header[1]),
-		description: header[2],
-		postings:    []Posting{},
-		headerIdx:   headerIdx,
+	// budger header
+	if line[i] == '~' {
+		return Transaction{}, nil
 	}
+
+	dateStart := i
+
+	t := Transaction{
+		postings:  []Posting{},
+		headerIdx: headerIdx,
+	}
+
+	for i < len(line) && (isDigit(line[i]) || isDateSeparator(line[i])) {
+		i++
+	}
+	t.date = Date(line[dateStart:i])
+
+	iBefore := i
+	i = consumeWhiteSpace(line, i)
+	if iBefore == i {
+		if i == len(line) {
+			return t, nil
+		} else {
+			return Transaction{}, headerUnmatchedError
+		}
+	}
+
+	if isStatusSymbol(line[i]) {
+		t.status = TransactionStatus(line[i])
+		i++
+		i = consumeWhiteSpace(line, i)
+	}
+	startDescription := i
+	i = consumeNonComment(line, i)
+	t.description = line[startDescription:i]
 
 	return t, nil
 }
