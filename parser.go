@@ -2,73 +2,153 @@ package main
 
 import (
 	"errors"
-	"regexp"
 	"strconv"
 )
 
-// FIXME: dirty parsing logic https://github.com/oshikiri/ledgerlint/issues/18
-var commentOrEmptyPattern = regexp.MustCompile(`^\s*(?:;|$)`)
-var headerPattern = regexp.MustCompile(`^(~|\d{4}[-\/]\d{2}[-\/]\d{2})(?:\s+(?:([\*!])\s+|)([^;]+))?(?:;.+)?$`)
-var postingPattern = regexp.MustCompile(`\s{2,}([^;]+\S)\s{2,}(-?\s?\d+)\s([\w^;]+)`)
-var postingPatternWithCurrencyMark = regexp.MustCompile(`\s{2,}([^;]+\S)\s{2,}(\$)(-?\s?\d+)`)
-var postingEmptyAmountPattern = regexp.MustCompile(`\s{2,}([^;]+)`)
+func consumeWhiteSpace(s string, i int) int {
+	for i < len(s) && isWhiteSpace(s[i]) {
+		i++
+	}
+	return i
+}
+
+func consumeNonComment(s string, i int) int {
+	for i < len(s) && !isCommentSymbol(s[i]) {
+		i++
+	}
+	return i
+}
+
+func isDigit(c byte) bool {
+	return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
+}
+
+// TODO: Add currency code if needed
+func isCurrencyCode(c byte) bool {
+	return c == '$'
+}
+
+// TODO: tab?
+func isWhiteSpace(c byte) bool {
+	return c == ' '
+}
+
+func isDateSeparator(c byte) bool {
+	return c == '/' || c == '-'
+}
+
+func isCommentSymbol(c byte) bool {
+	return c == ';'
+}
+
+func isStatusSymbol(c byte) bool {
+	return c == '!' || c == '*'
+}
+
+func isCommentOrEmpty(line string) bool {
+	if len(line) == 0 {
+		return true
+	}
+
+	i := consumeWhiteSpace(line, 0)
+	return len(line) == i || line[i] == ';'
+}
 
 func parsePostingStr(s string) (bool, Posting) {
-	m := postingPattern.FindStringSubmatch(s)
-	if len(m) == 4 { // non-empty amount
-		amount, err := strconv.Atoi(m[2])
-		if err == nil {
-			p := Posting{
-				account:     m[1],
-				amount:      Amount(amount),
-				currency:    m[3],
-				emptyAmount: false,
-			}
-			return true, p
+	size := len(s)
+	succeed := false
+
+	posting := Posting{}
+	i := consumeWhiteSpace(s, 0)
+
+	startAccount := i
+	for !(isWhiteSpace(s[i]) && isWhiteSpace(s[i+1])) {
+		i++
+		if i >= size {
+			break
+		}
+	}
+	posting.account = s[startAccount:i]
+	if i == size {
+		posting.emptyAmount = true
+		return true, posting
+	}
+
+	posting.emptyAmount = false
+	i += 2
+
+	if isCurrencyCode(s[i]) {
+		posting.currency = string(s[i])
+		i++
+		amount, _ := strconv.Atoi(s[i:]) // TODO: Error handling
+		posting.amount = Amount(amount)
+		succeed = true
+	} else {
+		digitsStart := i
+		if s[i] == '-' {
+			i++
+		}
+		// TODO: decimal
+		for i < size && isDigit(s[i]) {
+			i++
+		}
+		amount, _ := strconv.Atoi(s[digitsStart:i]) // TODO: Error handling
+		posting.amount = Amount(amount)
+
+		if i < size {
+			i = consumeWhiteSpace(s, i)
+			posting.currency = s[i:]
+			succeed = true
 		}
 	}
 
-	m = postingPatternWithCurrencyMark.FindStringSubmatch(s)
-	if len(m) == 4 {
-		amount, err := strconv.Atoi(m[3])
-		if err == nil {
-			p := Posting{
-				account:     m[1],
-				amount:      Amount(amount),
-				currency:    m[2],
-				emptyAmount: false,
-			}
-			return true, p
-		}
-	}
-
-	// empty amount
-	m = postingEmptyAmountPattern.FindStringSubmatch(s)
-	if len(m) == 2 {
-		p := Posting{
-			account:     m[1],
-			emptyAmount: true,
-		}
-		return true, p
-	}
-
-	return false, Posting{}
+	return succeed, posting
 }
 
 func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
-	matched := headerPattern.FindStringSubmatch(line)
-	if len(matched) == 0 {
-		return Transaction{}, errors.New("Header unmatched")
+	headerUnmatchedError := errors.New("Header unmatched")
+
+	i := consumeWhiteSpace(line, 0)
+	if i > 0 {
+		return Transaction{}, headerUnmatchedError
 	}
 
-	header := matched[1:]
-	t := Transaction{
-		date:        Date(header[0]),
-		status:      TransactionStatus(header[1]),
-		description: header[2],
-		postings:    []Posting{},
-		headerIdx:   headerIdx,
+	// budger header
+	if line[i] == '~' {
+		return Transaction{}, nil
 	}
+
+	dateStart := i
+
+	t := Transaction{
+		postings:  []Posting{},
+		headerIdx: headerIdx,
+	}
+
+	for i < len(line) && (isDigit(line[i]) || isDateSeparator(line[i])) {
+		i++
+	}
+	t.date = Date(line[dateStart:i])
+
+	iBefore := i
+	i = consumeWhiteSpace(line, i)
+	if iBefore == i {
+		if i == len(line) {
+			return t, nil
+		} else {
+			// it is invalid because non-whitespace character follows date string without whitespace
+			return Transaction{}, headerUnmatchedError
+		}
+	}
+
+	if isStatusSymbol(line[i]) {
+		t.status = TransactionStatus(line[i])
+		i++
+		i = consumeWhiteSpace(line, i)
+	}
+	startDescription := i
+	i = consumeNonComment(line, i)
+	t.description = line[startDescription:i]
 
 	return t, nil
 }
