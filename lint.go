@@ -50,8 +50,7 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 		}
 
 		if transaction.date == "" {
-			// When the line is neither header or posting, return "Header unmatched" for compatibility
-			validator.printer.warnHeaderUnmatched(transaction.headerIdx)
+			validator.printer.warnParseFailed(transaction.headerIdx)
 		} else {
 			validator.printer.warnPostingParse(transaction.headerIdx, line)
 		}

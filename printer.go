@@ -24,6 +24,14 @@ func (printer *Printer) warnHeaderUnmatched(countNewlines int) {
 	)
 }
 
+func (printer *Printer) warnParseFailed(countNewlines int) {
+	printer.print(
+		countNewlines,
+		"WARN",
+		fmt.Errorf("This line is neither comment nor header nor posting"),
+	)
+}
+
 func (printer *Printer) warnPostingParse(countNewlines int, line string) {
 	printer.print(
 		countNewlines,
