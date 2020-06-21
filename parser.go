@@ -78,8 +78,8 @@ func isCommentOrEmpty(line string) bool {
 func parsePostingStr(s string) (bool, Posting) {
 	size := len(s)
 	succeed := false
-
 	posting := Posting{}
+
 	i := consumeWhiteSpace(s, 0)
 
 	startAccount := i
@@ -90,7 +90,6 @@ func parsePostingStr(s string) (bool, Posting) {
 		return true, posting
 	}
 
-	posting.emptyAmount = false
 	i = consumeWhiteSpace(s, i)
 
 	if isCurrencyCode(s[i]) {
