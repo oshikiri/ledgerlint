@@ -74,9 +74,18 @@ func isCommentOrEmpty(line string) bool {
 	return len(line) == i || isCommentSymbol(line[i])
 }
 
+func parseAmount(s string) (Amount, error) {
+	amount, err := strconv.Atoi(s)
+	if err == nil {
+		return Amount(amount), nil
+	}
+	return -1, errors.New("Invalid amount")
+}
+
 func parsePostingStr(s string) (Posting, error) {
 	size := len(s)
 	posting := Posting{}
+	var err error
 
 	i := consumeWhiteSpace(s, 0)
 
@@ -97,8 +106,7 @@ func parsePostingStr(s string) (Posting, error) {
 	if isCurrencyCode(s[i]) {
 		posting.currency = string(s[i])
 		i++
-		amount, _ := strconv.Atoi(s[i:]) // TODO: Error handling
-		posting.amount = Amount(amount)
+		posting.amount, err = parseAmount(s[i:])
 	} else {
 		digitsStart := i
 		if s[i] == '-' {
@@ -106,8 +114,7 @@ func parsePostingStr(s string) (Posting, error) {
 		}
 		// TODO: decimal
 		i = consumeDigits(s, i)
-		amount, _ := strconv.Atoi(s[digitsStart:i]) // TODO: Error handling
-		posting.amount = Amount(amount)
+		posting.amount, err = parseAmount(s[digitsStart:i])
 
 		if i < size {
 			i = consumeWhiteSpace(s, i)
@@ -115,7 +122,7 @@ func parsePostingStr(s string) (Posting, error) {
 		}
 	}
 
-	return posting, nil
+	return posting, err
 }
 
 func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
