@@ -14,7 +14,7 @@ func TestParsePostingStrWithoutCurrency(t *testing.T) {
 		emptyAmount: false,
 	}
 	if err != nil || !reflect.DeepEqual(actual, expected) {
-		// t.Errorf("succeed = %v, %v != %v", err, actual, expected)
+		t.Errorf("succeed = %v, %v != %v", err, actual, expected)
 	}
 }
 
