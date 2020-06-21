@@ -1,1 +1,1 @@
-fixtures/unmatched.ledger:1 Header unmatched
+fixtures/unmatched.ledger:1 This line is neither comment nor header nor posting

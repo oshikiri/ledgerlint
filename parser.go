@@ -75,19 +75,22 @@ func isCommentOrEmpty(line string) bool {
 	return len(line) == i || isCommentSymbol(line[i])
 }
 
-func parsePostingStr(s string) (bool, Posting) {
+func parsePostingStr(s string) (Posting, error) {
 	size := len(s)
-	succeed := false
 	posting := Posting{}
 
 	i := consumeWhiteSpace(s, 0)
+
+	if i == 0 {
+		return posting, errors.New("Posting without indents")
+	}
 
 	startAccount := i
 	i = consumeUntilDoubleWhiteSpace(s, i)
 	posting.account = s[startAccount:i]
 	if i == size {
 		posting.emptyAmount = true
-		return true, posting
+		return posting, nil
 	}
 
 	i = consumeWhiteSpace(s, i)
@@ -97,7 +100,6 @@ func parsePostingStr(s string) (bool, Posting) {
 		i++
 		amount, _ := strconv.Atoi(s[i:]) // TODO: Error handling
 		posting.amount = Amount(amount)
-		succeed = true
 	} else {
 		digitsStart := i
 		if s[i] == '-' {
@@ -111,11 +113,10 @@ func parsePostingStr(s string) (bool, Posting) {
 		if i < size {
 			i = consumeWhiteSpace(s, i)
 			posting.currency = s[i:]
-			succeed = true
 		}
 	}
 
-	return succeed, posting
+	return posting, nil
 }
 
 func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {

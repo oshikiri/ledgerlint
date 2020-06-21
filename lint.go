@@ -38,9 +38,9 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 		}
 
 		// When the line is a posting, append it to transaction.postings
-		postingParseSucceed, posting := parsePostingStr(line)
+		posting, postingParseError := parsePostingStr(line)
 
-		if postingParseSucceed {
+		if postingParseError == nil {
 			if posting.emptyAmount && transaction.date == "" {
 				validator.printer.warnHeaderUnmatched(transaction.headerIdx)
 			} else {
