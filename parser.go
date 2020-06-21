@@ -119,11 +119,9 @@ func parsePostingStr(s string) (bool, Posting) {
 }
 
 func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
-	headerUnmatchedError := errors.New("Header unmatched")
-
 	i := consumeWhiteSpace(line, 0)
 	if i > 0 {
-		return Transaction{}, headerUnmatchedError
+		return Transaction{}, errors.New("Non-header")
 	}
 
 	// budger header
@@ -147,8 +145,7 @@ func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
 		if i == len(line) {
 			return t, nil
 		}
-		// it is invalid because non-whitespace character follows date string without whitespace
-		return Transaction{}, headerUnmatchedError
+		return Transaction{}, errors.New("Non-whitespace character follows date string without whitespace")
 	}
 
 	if isStatusSymbol(line[i]) {
