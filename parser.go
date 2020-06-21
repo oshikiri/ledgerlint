@@ -19,6 +19,27 @@ func consumeNonComment(s string, i int) int {
 	return i
 }
 
+func consumeDateStr(s string, i int) int {
+	for i < len(s) && (isDigit(s[i]) || isDateSeparator(s[i])) {
+		i++
+	}
+	return i
+}
+
+func consumeDigits(s string, i int) int {
+	for i < len(s) && isDigit(s[i]) {
+		i++
+	}
+	return i
+}
+
+func consumeUntilDoubleWhiteSpace(s string, i int) int {
+	for i < len(s) && !(isWhiteSpace(s[i]) && isWhiteSpace(s[i+1])) {
+		i++
+	}
+	return i
+}
+
 func isDigit(c byte) bool {
 	return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
 }
@@ -51,7 +72,7 @@ func isCommentOrEmpty(line string) bool {
 	}
 
 	i := consumeWhiteSpace(line, 0)
-	return len(line) == i || line[i] == ';'
+	return len(line) == i || isCommentSymbol(line[i])
 }
 
 func parsePostingStr(s string) (bool, Posting) {
@@ -62,12 +83,7 @@ func parsePostingStr(s string) (bool, Posting) {
 	i := consumeWhiteSpace(s, 0)
 
 	startAccount := i
-	for !(isWhiteSpace(s[i]) && isWhiteSpace(s[i+1])) {
-		i++
-		if i >= size {
-			break
-		}
-	}
+	i = consumeUntilDoubleWhiteSpace(s, i)
 	posting.account = s[startAccount:i]
 	if i == size {
 		posting.emptyAmount = true
@@ -75,7 +91,7 @@ func parsePostingStr(s string) (bool, Posting) {
 	}
 
 	posting.emptyAmount = false
-	i += 2
+	i = consumeWhiteSpace(s, i)
 
 	if isCurrencyCode(s[i]) {
 		posting.currency = string(s[i])
@@ -89,9 +105,7 @@ func parsePostingStr(s string) (bool, Posting) {
 			i++
 		}
 		// TODO: decimal
-		for i < size && isDigit(s[i]) {
-			i++
-		}
+		i = consumeDigits(s, i)
 		amount, _ := strconv.Atoi(s[digitsStart:i]) // TODO: Error handling
 		posting.amount = Amount(amount)
 
@@ -125,9 +139,7 @@ func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
 		headerIdx: headerIdx,
 	}
 
-	for i < len(line) && (isDigit(line[i]) || isDateSeparator(line[i])) {
-		i++
-	}
+	i = consumeDateStr(line, i)
 	t.date = Date(line[dateStart:i])
 
 	iBefore := i
