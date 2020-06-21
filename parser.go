@@ -49,7 +49,6 @@ func isCurrencyCode(c byte) bool {
 	return c == '$'
 }
 
-// TODO: tab?
 func isWhiteSpace(c byte) bool {
 	return c == ' '
 }
