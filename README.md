@@ -57,9 +57,6 @@ and then add `~/go/bin` to `$PATH`.
 
 ## Links
 ### This project
-- GitHub pages
-  - <https://oshikiri.github.io/ledgerlint/>
-  - <https://git.io/ledgerlint> (short url)
 - [ledgerlint repository](https://github.com/oshikiri/ledgerlint)
 - [vscode-ledgerlint repository](https://github.com/oshikiri/vscode-ledgerlint)
 
