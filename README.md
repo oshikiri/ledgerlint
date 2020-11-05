@@ -20,10 +20,22 @@ If you use vscode, see [vscode-ledgerlint].
 ## Installation
 
 ```sh
+wget https://oshikiri.github.io/ledgerlint/install.bash
+./install.bash
+```
+
+or
+
+```sh
 ./docs/install.bash
 ```
 
 See also <https://github.com/oshikiri/ledgerlint/releases/latest>
+
+## Usage
+```sh
+ledgerlint -h
+```
 
 ## Development
 ```sh
@@ -42,6 +54,19 @@ go install github.com/oshikiri/ledgerlint
 ```
 
 and then add `~/go/bin` to `$PATH`.
+
+## Links
+### This project
+- GitHub pages
+  - <https://oshikiri.github.io/ledgerlint/>
+  - <https://git.io/ledgerlint> (short url)
+- [ledgerlint repository](https://github.com/oshikiri/ledgerlint)
+- [vscode-ledgerlint repository](https://github.com/oshikiri/vscode-ledgerlint)
+
+### plaintext accounting
+- <https://plaintextaccounting.org/>
+- <https://www.ledger-cli.org/>
+- <https://hledger.org/>
 
 ## License
 
