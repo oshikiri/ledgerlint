@@ -1,2 +1,2 @@
-{"file_path":"fixtures/unknown-account.ledger","line_number":2,"level":"WARN","error_message":"unknown account: Expenses:Unknown expense"}
-{"file_path":"fixtures/unknown-account.ledger","line_number":7,"level":"WARN","error_message":"unknown account: Assets:Unknown asset"}
+{"file_path":"fixtures/unknown-account.ledger","line_number":2,"level":"WARN","severity":2,"error_message":"unknown account: Expenses:Unknown expense"}
+{"file_path":"fixtures/unknown-account.ledger","line_number":7,"level":"WARN","severity":2,"error_message":"unknown account: Assets:Unknown asset"}

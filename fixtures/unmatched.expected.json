@@ -1,1 +1,1 @@
-{"file_path":"fixtures/unmatched.ledger","line_number":1,"level":"WARN","error_message":"This line is neither comment nor header nor posting"}
+{"file_path":"fixtures/unmatched.ledger","line_number":1,"level":"WARN","severity":2,"error_message":"This line is neither comment nor header nor posting"}
