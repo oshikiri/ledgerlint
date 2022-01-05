@@ -9,5 +9,5 @@ func ExampleValidatorHeaderUnmatched() {
 func ExampleValidatorHeaderUnmatchedJSON() {
 	validator := newValidator("example/some.ledger", "", true)
 	validator.printer.warnHeaderUnmatched(11)
-	// Output: {"source":"ledgerlint","file_path":"example/some.ledger","line_number":11,"range":{"startLine":10,"startCharacter":0,"endLine":10,"endCharacter":80},"level":"WARN","severity":2,"error_message":"Header unmatched"}
+	// Output: {"source":"ledgerlint","file_path":"example/some.ledger","line_number":11,"range":{"startLine":10,"startCharacter":0,"endLine":10,"endCharacter":80},"level":"WARN","severity":2,"message":"Header unmatched"}
 }

@@ -1,1 +1,1 @@
-{"source":"ledgerlint","file_path":"fixtures/unmatched.ledger","line_number":1,"range":{"startLine":0,"startCharacter":0,"endLine":0,"endCharacter":80},"level":"WARN","severity":2,"error_message":"This line is neither comment nor header nor posting"}
+{"source":"ledgerlint","file_path":"fixtures/unmatched.ledger","line_number":1,"range":{"startLine":0,"startCharacter":0,"endLine":0,"endCharacter":80},"level":"WARN","severity":2,"message":"This line is neither comment nor header nor posting"}

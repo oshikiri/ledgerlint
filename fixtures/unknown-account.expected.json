@@ -1,2 +1,2 @@
-{"source":"ledgerlint","file_path":"fixtures/unknown-account.ledger","line_number":2,"range":{"startLine":1,"startCharacter":0,"endLine":1,"endCharacter":80},"level":"WARN","severity":2,"error_message":"unknown account: Expenses:Unknown expense"}
-{"source":"ledgerlint","file_path":"fixtures/unknown-account.ledger","line_number":7,"range":{"startLine":6,"startCharacter":0,"endLine":6,"endCharacter":80},"level":"WARN","severity":2,"error_message":"unknown account: Assets:Unknown asset"}
+{"source":"ledgerlint","file_path":"fixtures/unknown-account.ledger","line_number":2,"range":{"startLine":1,"startCharacter":0,"endLine":1,"endCharacter":80},"level":"WARN","severity":2,"message":"unknown account: Expenses:Unknown expense"}
+{"source":"ledgerlint","file_path":"fixtures/unknown-account.ledger","line_number":7,"range":{"startLine":6,"startCharacter":0,"endLine":6,"endCharacter":80},"level":"WARN","severity":2,"message":"unknown account: Assets:Unknown asset"}
