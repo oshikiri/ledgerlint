@@ -1,1 +1,1 @@
-{"file_path":"fixtures/two-empty-amount.ledger","line_number":1,"level":"ERROR","error_message":"Transaction contains two or more empty amount"}
+{"file_path":"fixtures/two-empty-amount.ledger","line_number":1,"level":"ERROR","severity":1,"error_message":"Transaction contains two or more empty amount"}

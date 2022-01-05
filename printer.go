@@ -41,9 +41,15 @@ func (printer *Printer) warnPostingParse(countNewlines int, line string) {
 }
 
 func (printer *Printer) print(countNewlines int, logLevel string, err error) {
+	severity := 3
+	if logLevel == "ERROR" {
+		severity = 1
+	} else if logLevel == "WARN" {
+		severity = 2
+	}
 	if printer.outputJSON {
-		parseFailedMsg := `{"file_path":"%v","line_number":%v,"level":"%v","error_message":"%v"}` + "\n"
-		fmt.Printf(parseFailedMsg, printer.filePath, countNewlines, logLevel, err)
+		parseFailedMsg := `{"file_path":"%v","line_number":%v,"level":"%v","severity":%v,"error_message":"%v"}` + "\n"
+		fmt.Printf(parseFailedMsg, printer.filePath, countNewlines, logLevel, severity, err)
 	} else {
 		parseFailedMsg := "%v:%v %v\n"
 		fmt.Printf(parseFailedMsg, printer.filePath, countNewlines, err)

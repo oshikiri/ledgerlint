@@ -1,1 +1,1 @@
-{"file_path":"fixtures/imbalance-multi-currency.ledger","line_number":1,"level":"ERROR","error_message":"imbalanced transaction, (total amount) = 1000 JPY - 1800 USD"}
+{"file_path":"fixtures/imbalance-multi-currency.ledger","line_number":1,"level":"ERROR","severity":1,"error_message":"imbalanced transaction, (total amount) = 1000 JPY - 1800 USD"}
