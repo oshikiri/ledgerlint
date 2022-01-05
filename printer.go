@@ -48,7 +48,7 @@ func (printer *Printer) print(countNewlines int, logLevel string, err error) {
 		severity = 2
 	}
 	if printer.outputJSON {
-		parseFailedMsg := `{"file_path":"%v","line_number":%v,"level":"%v","severity":%v,"error_message":"%v"}` + "\n"
+		parseFailedMsg := `{"source":"ledgerlint","file_path":"%v","line_number":%v,"level":"%v","severity":%v,"error_message":"%v"}` + "\n"
 		fmt.Printf(parseFailedMsg, printer.filePath, countNewlines, logLevel, severity, err)
 	} else {
 		parseFailedMsg := "%v:%v %v\n"
