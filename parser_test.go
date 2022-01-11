@@ -76,3 +76,16 @@ func TestParseTransactionHeaderInvalid(t *testing.T) {
 		t.Errorf("%v", err)
 	}
 }
+
+func TestParsePostingStrComment(t *testing.T) {
+	actual, err := parsePostingStr("  Asset:Something  100 ; comment")
+	expected := Posting{
+		account:     "Asset:Something",
+		amount:      100,
+		currency:    "",
+		emptyAmount: false,
+	}
+	if err != nil || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("succeed = %v, %v != %v", err, actual, expected)
+	}
+}
