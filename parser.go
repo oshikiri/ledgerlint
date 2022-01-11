@@ -118,7 +118,9 @@ func parsePostingStr(s string) (Posting, error) {
 
 		if i < size {
 			i = consumeWhiteSpace(s, i)
-			posting.currency = s[i:]
+			start := i
+			i = consumeNonComment(s, i)
+			posting.currency = s[start:i]
 		}
 	}
 
