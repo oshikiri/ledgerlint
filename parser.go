@@ -40,6 +40,17 @@ func consumeUntilDoubleWhiteSpace(s string, i int) int {
 	return i
 }
 
+func restoreTailWhiteSpaces(s string, i int) int {
+	if s[i-1] != ' ' {
+		return i
+	}
+	i--
+	for i >= 0 && isWhiteSpace(s[i]) {
+		i--
+	}
+	return i + 1
+}
+
 func isDigit(c byte) bool {
 	return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
 }
@@ -120,6 +131,7 @@ func parsePostingStr(s string) (Posting, error) {
 			i = consumeWhiteSpace(s, i)
 			start := i
 			i = consumeNonComment(s, i)
+			i = restoreTailWhiteSpaces(s, i)
 			posting.currency = s[start:i]
 		}
 	}

@@ -78,11 +78,11 @@ func TestParseTransactionHeaderInvalid(t *testing.T) {
 }
 
 func TestParsePostingStrComment(t *testing.T) {
-	actual, err := parsePostingStr("  Asset:Something  100 ; comment")
+	actual, err := parsePostingStr("  Asset:Something  100 JPY ; comment")
 	expected := Posting{
 		account:     "Asset:Something",
 		amount:      100,
-		currency:    "",
+		currency:    "JPY",
 		emptyAmount: false,
 	}
 	if err != nil || !reflect.DeepEqual(actual, expected) {
