@@ -50,7 +50,7 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 		}
 
 		if transaction.date == "" {
-			validator.printer.warnParseFailed(transaction.headerIdx)
+			validator.printer.warnParseFailed(iLine)
 		} else {
 			validator.printer.warnPostingParse(transaction.headerIdx, line)
 		}

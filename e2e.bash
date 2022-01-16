@@ -40,6 +40,7 @@ test_ledgerlint budget
 test_ledgerlint two-empty-amount
 test_ledgerlint dollar-mark
 test_ledgerlint comment
+test_ledgerlint unparsable
 
 if [ $count_failed -eq 0 ]; then
   echo "All tests passed"
