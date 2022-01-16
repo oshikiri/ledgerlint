@@ -49,6 +49,12 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 			continue
 		}
 
+		// When the line is market price, skip it for now
+		// https://hledger.org/investments.html#market-prices
+		if line[0] == 'P' {
+			continue
+		}
+
 		if transaction.date == "" {
 			validator.printer.warnParseFailed(iLine)
 		} else {
