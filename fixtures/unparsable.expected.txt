@@ -1,1 +1,1 @@
-fixtures/unparsable.ledger:1 This line is neither comment nor header nor posting
+fixtures/unparsable.ledger:3 This line is neither comment nor header nor posting
