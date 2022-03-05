@@ -145,9 +145,10 @@ func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
 		return Transaction{}, errors.New("Non-header")
 	}
 
-	// budger header
+	// budget header
 	if line[i] == '~' {
-		return Transaction{}, nil
+		i++
+		i = consumeWhiteSpace(line, i)
 	}
 
 	dateStart := i

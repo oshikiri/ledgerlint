@@ -77,6 +77,18 @@ func TestParseTransactionHeaderInvalid(t *testing.T) {
 	}
 }
 
+func TestParseTransactionHeaderBudget(t *testing.T) {
+	actual, err := parseTransactionHeader(11, "~ 2020/01/01 ; comment")
+	expected := Transaction{
+		date:      "2020/01/01",
+		postings:  []Posting{},
+		headerIdx: 11,
+	}
+	if err != nil || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("%v", err)
+	}
+}
+
 func TestParsePostingStrComment(t *testing.T) {
 	actual, err := parsePostingStr("  Asset:Something  100 JPY ; comment")
 	expected := Posting{
