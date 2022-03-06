@@ -101,3 +101,29 @@ func TestParsePostingStrComment(t *testing.T) {
 		t.Errorf("succeed = %v, %v != %v", err, actual, expected)
 	}
 }
+
+func TestParsePostingStrPerUnitPrice(t *testing.T) {
+	actual, err := parsePostingStr("  Asset:Something  10 AAPL @ 10 JPY")
+	expected := Posting{
+		account:     "Asset:Something",
+		amount:      10,
+		currency:    "AAPL",
+		emptyAmount: false,
+	}
+	if err != nil || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("succeed = %v, %+v != %+v", err, actual, expected)
+	}
+}
+
+func TestParsePostingStrTotalCost(t *testing.T) {
+	actual, err := parsePostingStr("  Asset:Something  10 AAPL @@ 100 JPY")
+	expected := Posting{
+		account:     "Asset:Something",
+		amount:      100,
+		currency:    "JPY",
+		emptyAmount: false,
+	}
+	if err != nil || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("succeed = %v, %+v != %+v", err, actual, expected)
+	}
+}

@@ -12,6 +12,13 @@ func consumeWhiteSpace(s string, i int) int {
 	return i
 }
 
+func consumeNonWhiteSpace(s string, i int) int {
+	for i < len(s) && !isWhiteSpace(s[i]) {
+		i++
+	}
+	return i
+}
+
 func consumeNonComment(s string, i int) int {
 	for i < len(s) && !isCommentSymbol(s[i]) {
 		i++
@@ -114,10 +121,32 @@ func parsePostingStr(s string) (Posting, error) {
 
 	i = consumeWhiteSpace(s, i)
 
+	var amount Amount
+	var currency string
+	i, amount, currency, err = parseAccountAndCurrency(s, i)
+	i = consumeWhiteSpace(s, i)
+	if i+1 < size && s[i] == '@' && s[i+1] == '@' {
+		i = i + 2
+		i = consumeWhiteSpace(s, i)
+		i, amount, currency, err = parseAccountAndCurrency(s, i)
+	}
+
+	posting.amount = amount
+	posting.currency = currency
+
+	return posting, err
+}
+
+func parseAccountAndCurrency(s string, i int) (int, Amount, string, error) {
+	currency := ""
+	var amount Amount
+	var err error
+	size := len(s)
+
 	if isCurrencyCode(s[i]) {
-		posting.currency = string(s[i])
+		currency = string(s[i])
 		i++
-		posting.amount, err = parseAmount(s[i:])
+		amount, err = parseAmount(s[i:])
 	} else {
 		digitsStart := i
 		if s[i] == '-' {
@@ -125,18 +154,18 @@ func parsePostingStr(s string) (Posting, error) {
 		}
 		// TODO: decimal
 		i = consumeDigits(s, i)
-		posting.amount, err = parseAmount(s[digitsStart:i])
+		amount, err = parseAmount(s[digitsStart:i])
 
 		if i < size {
 			i = consumeWhiteSpace(s, i)
 			start := i
-			i = consumeNonComment(s, i)
+			i = consumeNonWhiteSpace(s, i)
 			i = restoreTailWhiteSpaces(s, i)
-			posting.currency = s[start:i]
+			currency = s[start:i]
 		}
 	}
 
-	return posting, err
+	return i, amount, currency, err
 }
 
 func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
