@@ -169,6 +169,8 @@ func parseAccountAndCurrency(s string, i int) (int, Amount, string, error) {
 }
 
 func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
+	size := len(line)
+
 	i := consumeWhiteSpace(line, 0)
 	if i > 0 {
 		return Transaction{}, errors.New("Non-header")
@@ -178,6 +180,9 @@ func parseTransactionHeader(headerIdx int, line string) (Transaction, error) {
 	if line[i] == '~' {
 		i++
 		i = consumeWhiteSpace(line, i)
+	}
+	if i+5 < size && line[i:(i+5)] == "every" {
+		return Transaction{description: line[i:]}, nil
 	}
 
 	dateStart := i

@@ -89,6 +89,16 @@ func TestParseTransactionHeaderBudget(t *testing.T) {
 	}
 }
 
+func TestParseTransactionHeaderBudgetEvery(t *testing.T) {
+	actual, err := parseTransactionHeader(11, "~ every 5th day of month ; comment")
+	expected := Transaction{
+		description: "every 5th day of month ; comment",
+	}
+	if err != nil || !reflect.DeepEqual(actual, expected) {
+		t.Errorf("%v", err)
+	}
+}
+
 func TestParsePostingStrComment(t *testing.T) {
 	actual, err := parsePostingStr("  Asset:Something  100 JPY ; comment")
 	expected := Posting{
