@@ -20,13 +20,6 @@ If you use vscode, see [vscode-ledgerlint].
 ## Installation
 
 ```sh
-wget https://oshikiri.github.io/ledgerlint/install.bash
-./install.bash
-```
-
-or
-
-```sh
 ./docs/install.bash
 ```
 
