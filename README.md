@@ -20,7 +20,7 @@ If you use vscode, see [vscode-ledgerlint].
 ## Installation
 
 ```sh
-./docs/install.bash
+./install.bash
 ```
 
 See also <https://github.com/oshikiri/ledgerlint/releases/latest>
