@@ -1,1 +1,1 @@
-{"source":"ledgerlint","file_path":"fixtures/imbalance-multi-currency.ledger","line_number":1,"range":{"startLine":0,"startCharacter":0,"endLine":0,"endCharacter":80},"level":"ERROR","severity":1,"message":"imbalanced transaction, (total amount) = 1000 JPY - 1800 USD"}
+{"source":"ledgerlint","file_path":"fixtures/imbalance-multi-currency.ledger","line_number":1,"range":{"start":{"line":0,"character":0},"end":{"line":0,"character":80}},"level":"ERROR","severity":1,"message":"imbalanced transaction, (total amount) = 1000 JPY - 1800 USD"}
