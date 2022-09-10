@@ -7,7 +7,7 @@ import "errors"
 // Date is date string
 type Date string
 
-// TransactionStatus should be one of ['*', '!', '']
+// TransactionStatus should be one of ['*', '!', null]
 type TransactionStatus string
 
 // Amount for transaction posting, without currency
