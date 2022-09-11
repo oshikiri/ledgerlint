@@ -1,1 +1,1 @@
-{"source":"ledgerlint","file_path":"fixtures/two-empty-amount.ledger","line_number":1,"range":{"start":{"line":0,"character":0},"end":{"line":0,"character":80}},"level":"ERROR","severity":1,"message":"Transaction contains two or more empty amount"}
+{"type":"diagnostic","source":"ledgerlint","file_path":"fixtures/two-empty-amount.ledger","line_number":1,"range":{"start":{"line":0,"character":0},"end":{"line":0,"character":80}},"level":"ERROR","severity":1,"message":"Transaction contains two or more empty amount"}

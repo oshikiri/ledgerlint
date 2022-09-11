@@ -1,1 +1,1 @@
-{"source":"ledgerlint","file_path":"fixtures/unparsable.ledger","line_number":3,"range":{"start":{"line":2,"character":0},"end":{"line":2,"character":80}},"level":"WARN","severity":2,"message":"This line is neither comment nor header nor posting"}
+{"type":"diagnostic","source":"ledgerlint","file_path":"fixtures/unparsable.ledger","line_number":3,"range":{"start":{"line":2,"character":0},"end":{"line":2,"character":80}},"level":"WARN","severity":2,"message":"This line is neither comment nor header nor posting"}

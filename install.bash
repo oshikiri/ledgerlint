@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LEDGERLINT_VERSION=0.0.3
+LEDGERLINT_VERSION=2.0.2
 
 REPOSITORY="https://github.com/oshikiri/ledgerlint"
 
