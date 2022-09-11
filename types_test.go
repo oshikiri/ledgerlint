@@ -34,7 +34,7 @@ func TestTransactionCalculateTotalAmount(t *testing.T) {
 		expectedContainsOneEmptyAmount := fixture.expectedContainsOneEmptyAmount
 		expectedAmounts := fixture.expectedAmounts
 
-		actualContainsOneEmptyAmount, actualTotalAmounts, err := transaction.calculateTotalAmount()
+		actualContainsOneEmptyAmount, _, actualTotalAmounts, _, err := transaction.calculateTotalAmount()
 		if err != nil {
 			t.Errorf("error is not nil: %v", err)
 		}

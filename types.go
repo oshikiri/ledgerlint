@@ -23,20 +23,22 @@ type Transaction struct {
 }
 
 // calculateTotalAmount returns (containsOneEmptyAmount, totalAmount)
-func (tx *Transaction) calculateTotalAmount() (bool, map[string]Amount, error) {
+func (tx *Transaction) calculateTotalAmount() (bool, bool, map[string]Amount, int, error) {
 	totalAmounts := map[string]Amount{}
 	containsOneEmptyAmount := false
+	emptyAmountLine := tx.headerIdx
 	for _, posting := range tx.postings {
 		if posting.emptyAmount {
 			if containsOneEmptyAmount {
-				return containsOneEmptyAmount, nil, errors.New("Transaction contains two or more empty amount")
+				return containsOneEmptyAmount, true, nil, emptyAmountLine, errors.New("Transaction contains two or more empty amount")
 			}
 			containsOneEmptyAmount = true
+			emptyAmountLine = posting.line
 		} else {
 			totalAmounts[posting.currency] += posting.amount
 		}
 	}
-	return containsOneEmptyAmount, totalAmounts, nil
+	return containsOneEmptyAmount, false, totalAmounts, emptyAmountLine, nil
 }
 
 // Posting contains its account type and amount object
@@ -45,4 +47,5 @@ type Posting struct {
 	emptyAmount bool
 	amount      Amount
 	currency    string
+	line        int
 }

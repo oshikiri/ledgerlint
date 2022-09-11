@@ -87,7 +87,7 @@ func (validator *Validator) checkUnknownAccount(countNewlines int, posting Posti
 }
 
 func (validator *Validator) checkBalancing(countNewlines int, transaction Transaction) {
-	containsOneEmptyAmount, totalAmount, err := transaction.calculateTotalAmount()
+	containsOneEmptyAmount, containsTwoOrMoreEmptyAmounts, totalAmount, emptyAmountLine, err := transaction.calculateTotalAmount()
 
 	if err != nil {
 		validator.printer.print(countNewlines, "ERROR", err)
@@ -97,6 +97,10 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 			"ERROR",
 			fmt.Errorf("imbalanced transaction, (total amount) = %v", totalAmountStr(totalAmount)),
 		)
+	}
+
+	if containsOneEmptyAmount && !containsTwoOrMoreEmptyAmounts {
+		validator.printer.printDecoration(totalAmount, emptyAmountLine)
 	}
 }
 

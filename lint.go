@@ -38,7 +38,7 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 		}
 
 		// When the line is a posting, append it to transaction.postings
-		posting, postingParseError := parsePostingStr(line)
+		posting, postingParseError := parsePostingStr(iLine, line)
 
 		if postingParseError == nil {
 			if posting.emptyAmount && transaction.date == "" {

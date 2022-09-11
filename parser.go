@@ -100,9 +100,9 @@ func parseAmount(s string) (Amount, error) {
 	return -1, errors.New("Invalid amount")
 }
 
-func parsePostingStr(s string) (Posting, error) {
+func parsePostingStr(line int, s string) (Posting, error) {
 	size := len(s)
-	posting := Posting{}
+	posting := Posting{line: line}
 	var err error
 
 	i := consumeWhiteSpace(s, 0)

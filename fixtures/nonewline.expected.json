@@ -1,0 +1,2 @@
+{"type":"decoration","source":"ledgerlint","file_path":"fixtures/nonewline.ledger","range":{"start":{"line":2,"character":0},"end":{"line":2,"character":80}},"renderOptions":{"after":{"contentText":"- 200 JPY","color":"grey","margin":"2ch"}}}
+{"type":"decoration","source":"ledgerlint","file_path":"fixtures/nonewline.ledger","range":{"start":{"line":6,"character":0},"end":{"line":6,"character":80}},"renderOptions":{"after":{"contentText":"- 200 JPY","color":"grey","margin":"2ch"}}}
