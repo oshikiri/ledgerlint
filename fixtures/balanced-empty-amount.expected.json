@@ -1,0 +1,1 @@
+{"type":"decoration","source":"ledgerlint","file_path":"fixtures/balanced-empty-amount.ledger","range":{"start":{"line":3,"character":0},"end":{"line":3,"character":80}},"renderOptions":{"after":{"contentText":"- 800 JPY","color":"grey","margin":"2ch"}}}

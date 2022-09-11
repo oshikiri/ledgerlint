@@ -59,3 +59,26 @@ func (printer *Printer) print(countNewlines int, logLevel string, err error) {
 		fmt.Printf(parseFailedMsg, printer.filePath, countNewlines, err)
 	}
 }
+
+func (printer *Printer) printDecoration(totalAmount map[string]Amount, emptyAmountLine int) {
+	if !printer.outputJSON {
+		return
+	}
+	totalAmountStr := ""
+	for k, v := range totalAmount {
+		if totalAmountStr != "" {
+			totalAmountStr += " "
+		}
+
+		vAbs := v
+		if v > 0 {
+			totalAmountStr += "- "
+		} else {
+			vAbs = -v
+			totalAmountStr += "+ "
+		}
+		totalAmountStr += fmt.Sprintf("%.0f %v", vAbs, strings.Trim(k, "\""))
+	}
+	decorationMsg := `{"type":"decoration","source":"ledgerlint","file_path":"%v","range":{"start":{"line":%v,"character":%v},"end":{"line":%v,"character":%v}},"renderOptions":{"after":{"contentText":"%v","color":"grey","margin":"2ch"}}}` + "\n"
+	fmt.Printf(decorationMsg, printer.filePath, emptyAmountLine-1, 0, emptyAmountLine-1, 80, totalAmountStr)
+}
