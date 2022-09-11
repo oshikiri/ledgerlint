@@ -6,12 +6,13 @@ import (
 )
 
 func TestParsePostingStrWithoutCurrency(t *testing.T) {
-	actual, err := parsePostingStr("  Asset:Something  100")
+	actual, err := parsePostingStr(6, "  Asset:Something  100")
 	expected := Posting{
 		account:     "Asset:Something",
 		amount:      100,
 		currency:    "",
 		emptyAmount: false,
+		line:        6,
 	}
 	if err != nil || !reflect.DeepEqual(actual, expected) {
 		t.Errorf("succeed = %v, %v != %v", err, actual, expected)
@@ -19,12 +20,13 @@ func TestParsePostingStrWithoutCurrency(t *testing.T) {
 }
 
 func TestParsePostingStrJPY(t *testing.T) {
-	actual, err := parsePostingStr("  Asset:Something  100 JPY")
+	actual, err := parsePostingStr(6, "  Asset:Something  100 JPY")
 	expected := Posting{
 		account:     "Asset:Something",
 		amount:      100,
 		currency:    "JPY",
 		emptyAmount: false,
+		line:        6,
 	}
 	if err != nil || !reflect.DeepEqual(actual, expected) {
 		t.Errorf("err = %v, %v != %v", err, actual, expected)
@@ -32,12 +34,13 @@ func TestParsePostingStrJPY(t *testing.T) {
 }
 
 func TestParsePostingStrDollar(t *testing.T) {
-	actual, err := parsePostingStr("  Asset:Something  $1")
+	actual, err := parsePostingStr(6, "  Asset:Something  $1")
 	expected := Posting{
 		account:     "Asset:Something",
 		amount:      1,
 		currency:    "$",
 		emptyAmount: false,
+		line:        6,
 	}
 	if err != nil || !reflect.DeepEqual(actual, expected) {
 		t.Errorf("err = %v, %v != %v", err, actual, expected)
@@ -45,10 +48,11 @@ func TestParsePostingStrDollar(t *testing.T) {
 }
 
 func TestParsePostingStrEmpty(t *testing.T) {
-	actual, err := parsePostingStr("  Asset:Something")
+	actual, err := parsePostingStr(6, "  Asset:Something")
 	expected := Posting{
 		account:     "Asset:Something",
 		emptyAmount: true,
+		line:        6,
 	}
 	if err != nil || !reflect.DeepEqual(actual, expected) {
 		t.Errorf("err = %v, %v != %v", err, actual, expected)
@@ -100,12 +104,13 @@ func TestParseTransactionHeaderBudgetEvery(t *testing.T) {
 }
 
 func TestParsePostingStrComment(t *testing.T) {
-	actual, err := parsePostingStr("  Asset:Something  100 JPY ; comment")
+	actual, err := parsePostingStr(6, "  Asset:Something  100 JPY ; comment")
 	expected := Posting{
 		account:     "Asset:Something",
 		amount:      100,
 		currency:    "JPY",
 		emptyAmount: false,
+		line:        6,
 	}
 	if err != nil || !reflect.DeepEqual(actual, expected) {
 		t.Errorf("succeed = %v, %v != %v", err, actual, expected)
@@ -113,12 +118,13 @@ func TestParsePostingStrComment(t *testing.T) {
 }
 
 func TestParsePostingStrPerUnitPrice(t *testing.T) {
-	actual, err := parsePostingStr("  Asset:Something  10 AAPL @ 10 JPY")
+	actual, err := parsePostingStr(6, "  Asset:Something  10 AAPL @ 10 JPY")
 	expected := Posting{
 		account:     "Asset:Something",
 		amount:      10,
 		currency:    "AAPL",
 		emptyAmount: false,
+		line:        6,
 	}
 	if err != nil || !reflect.DeepEqual(actual, expected) {
 		t.Errorf("succeed = %v, %+v != %+v", err, actual, expected)
@@ -126,12 +132,13 @@ func TestParsePostingStrPerUnitPrice(t *testing.T) {
 }
 
 func TestParsePostingStrTotalCost(t *testing.T) {
-	actual, err := parsePostingStr("  Asset:Something  10 AAPL @@ 100 JPY")
+	actual, err := parsePostingStr(6, "  Asset:Something  10 AAPL @@ 100 JPY")
 	expected := Posting{
 		account:     "Asset:Something",
 		amount:      100,
 		currency:    "JPY",
 		emptyAmount: false,
+		line:        6,
 	}
 	if err != nil || !reflect.DeepEqual(actual, expected) {
 		t.Errorf("succeed = %v, %+v != %+v", err, actual, expected)

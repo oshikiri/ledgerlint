@@ -87,7 +87,7 @@ func (validator *Validator) checkUnknownAccount(countNewlines int, posting Posti
 }
 
 func (validator *Validator) checkBalancing(countNewlines int, transaction Transaction) {
-	containsOneEmptyAmount, totalAmount, err := transaction.calculateTotalAmount()
+	containsOneEmptyAmount, totalAmount, emptyAmountLine, err := transaction.calculateTotalAmount()
 
 	if err != nil {
 		validator.printer.print(countNewlines, "ERROR", err)
@@ -97,6 +97,26 @@ func (validator *Validator) checkBalancing(countNewlines int, transaction Transa
 			"ERROR",
 			fmt.Errorf("imbalanced transaction, (total amount) = %v", totalAmountStr(totalAmount)),
 		)
+	}
+
+	if containsOneEmptyAmount {
+		totalAmountStr := ""
+		for k, v := range totalAmount {
+			if totalAmountStr != "" {
+				totalAmountStr += " "
+			}
+
+			vAbs := v
+			if v > 0 {
+				totalAmountStr += "- "
+			} else {
+				vAbs = -v
+				totalAmountStr += "+ "
+			}
+			totalAmountStr += fmt.Sprintf("%.0f %v", vAbs, strings.Trim(k, "\""))
+		}
+		decorationMsg := `{"type":"decoration","source":"ledgerlint","file_path":"%v","range":{"start":{"line":%v,"character":%v},"end":{"line":%v,"character":%v}},"renderOptions":{"after":{"contentText":"%v","color":"grey","margin":"2ch"}}}` + "\n"
+		fmt.Printf(decorationMsg, validator.printer.filePath, emptyAmountLine-1, 0, emptyAmountLine-1, 80, totalAmountStr)
 	}
 }
 
