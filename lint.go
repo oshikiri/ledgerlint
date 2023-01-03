@@ -25,7 +25,7 @@ func lintTransactionFile(filePath, accountsPath string, outputJSON bool) {
 		line := scanner.Text()
 
 		// When the line is empty, skip it
-		if isCommentOrEmpty(line) {
+		if isIgnorable(line) {
 			continue
 		}
 

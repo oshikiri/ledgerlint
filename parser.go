@@ -83,12 +83,17 @@ func isStatusSymbol(c byte) bool {
 	return c == '!' || c == '*'
 }
 
-func isCommentOrEmpty(line string) bool {
+func isIgnorable(line string) bool {
 	if len(line) == 0 {
 		return true
 	}
 
 	i := consumeWhiteSpace(line, 0)
+
+	if i+7 < len(line) && line[i:(i+7)] == "include" {
+		return true
+	}
+
 	return len(line) == i || isCommentSymbol(line[i])
 }
 
