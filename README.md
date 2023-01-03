@@ -1,6 +1,10 @@
 ledgerlint: a linter for ledger transaction
 =====
 
+deprecated. See [hledger-check](https://github.com/oshikiri/vscode-generic-annotator/commit/9943e07f0e0cf1d22d5343ff71ebf52232caec15)
+
+-----
+
 [![Build Status](https://github.com/oshikiri/ledgerlint/workflows/Go/badge.svg)](https://github.com/oshikiri/ledgerlint/actions?query=workflow%3AGo) [![go report](https://goreportcard.com/badge/github.com/oshikiri/ledgerlint)](https://goreportcard.com/report/github.com/oshikiri/ledgerlint) [![release](https://img.shields.io/github/v/release/oshikiri/ledgerlint.svg)](https://github.com/oshikiri/ledgerlint/releases/latest)
 
 ```sh
